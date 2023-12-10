@@ -2,7 +2,6 @@ import numpy as np
 
 
 class Function:
-
     def __call__(self, x):
         raise NotImplementedError("Function.__call__() not implemented.")
 
@@ -11,7 +10,6 @@ class Function:
 
 
 class Sigmoid(Function):
-
     def df(self, x):
         return self.__call__(x) * (1 - self.__call__(x))
 
@@ -23,7 +21,6 @@ class Sigmoid(Function):
 
 
 class ReLU(Function):
-
     def df(self, x):
         return np.where(x <= 0, 0, 1)
 
@@ -35,7 +32,6 @@ class ReLU(Function):
 
 
 class Tanh(Function):
-
     def df(self, x):
         return 1 - np.tanh(x) ** 2
 
@@ -47,7 +43,6 @@ class Tanh(Function):
 
 
 class Softmax(Function):
-
     def df(self, x):
         return self.__call__(x) * (1 - self.__call__(x))
 

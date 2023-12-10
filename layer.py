@@ -3,6 +3,7 @@ import numpy as np
 
 class HiddenLayer:
     """Class that represents a hidden layer of the network."""
+
     def __init__(self, input_size, units_size, activation):
         """Initialize the hidden layer with input_size inputs,
         units_size units, and the specified activation function.
@@ -31,8 +32,12 @@ class HiddenLayer:
         self.net = inputs.dot(self.W) + self.b
         self.out = self.activation(self.net)
         return self.out
-    
+
+    # TODO: implement backpropagation
+
     def __str__(self) -> str:
         """Returns a string description of the layer."""
-        return (f"HiddenLayer(units_size={self.units_size}, input_size={self.input_size},"
-                f"activation={self.activation.__name__})\nW={self.W}\nb={self.b})")
+        return (
+            f"HiddenLayer(units_size={self.units_size}, input_size={self.input_size},"
+            f"activation={self.activation.__name__})\nW={self.W}\nb={self.b})"
+        )
