@@ -1,6 +1,6 @@
 import numpy as np
 
-def idebtity(x):
+def identity(x):
     return x
 
 def sigmoid(x):
