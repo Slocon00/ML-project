@@ -21,10 +21,10 @@ def tanh(x):
 def d_tanh(x):
     return 1 - np.tanh(x) ** 2
 
-def mse(y_pred, y_true):
+def mse(y_pred: np.ndarray, y_true: np.ndarray):
     return np.mean((y_pred - y_true) ** 2)
 
 #serve? bho l'ha messa copilot
-def d_mse(y_pred, y_true):
+def d_mse(y_pred: np.ndarray, y_true: np.ndarray):
     return 2 * (y_pred - y_true) / y_true.size
 
