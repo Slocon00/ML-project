@@ -38,6 +38,6 @@ class HiddenLayer:
     def __str__(self) -> str:
         """Returns a string description of the layer."""
         return (
-            f"HiddenLayer(units_size={self.units_size}, input_size={self.input_size},"
-            f"activation={self.activation.__name__})\nW={self.W}\nb={self.b})"
+            f"HiddenLayer(input_size={self.input_size}, units_size={self.units_size}, "
+            f"activation={self.activation})\nW={self.W}\nb={self.b})"
         )

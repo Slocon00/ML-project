@@ -7,6 +7,9 @@ class Function:
 
     def df(self, x):
         raise NotImplementedError("Function.df() not implemented.")
+    
+    def __str__(self) -> str:
+        raise NotImplementedError("Function.__str__() not implemented.")
 
 
 class Sigmoid(Function):

@@ -1,3 +1,5 @@
+import numpy as np
+
 from layer import HiddenLayer
 from losses import Loss
 
@@ -19,9 +21,15 @@ class Network:
         self.layers.append(layer)
         self.n_layers += 1
 
-    def forward(self):
+    def forward(self, inputs: np.ndarray):
+        self.inputs = inputs
+
+        o = self.layers[0].forward(inputs)
+
         """Forward the inputs through the network."""
-        pass
+        for layer in self.layers[1:]:
+            o = layer.forward(o)
+        
 
     def backward(self):
         """Backpropagate the error through the network."""
