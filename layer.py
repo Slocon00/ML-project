@@ -41,3 +41,10 @@ class HiddenLayer:
             f"HiddenLayer(input_size={self.input_size}, units_size={self.units_size}, "
             f"activation={self.activation})\nW={self.W}\nb={self.b})"
         )
+    
+    def getW(self) -> str:
+        # print the weights as a matrix
+        return self.W
+
+    
+
