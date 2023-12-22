@@ -11,15 +11,13 @@ class Network:
         """
 
         self.layers = []
-        self.n_layers = 0
         self.loss = loss
 
     def add_layer(self, layer: HiddenLayer):
         """Add a layer to the network."""
-        if self.n_layers > 0:
+        if self.get_layer_count() > 0:
             self.check_layers_shape(self.layers[-1].units_size, layer.input_size)
         self.layers.append(layer)
-        self.n_layers += 1
 
     def forward(self, inputs: np.ndarray):
         self.inputs = inputs
@@ -29,7 +27,6 @@ class Network:
         """Forward the inputs through the network."""
         for layer in self.layers[1:]:
             o = layer.forward(o)
-        
 
     def backward(self):
         """Backpropagate the error through the network."""
@@ -41,6 +38,9 @@ class Network:
             raise ValueError(
                 f"Error: vectors must have same shape. The shapes are units_size: {units_size} and input_size: {input_size}"
             )
+
+    def get_layer_count(self):
+        return len(self.layers)
 
     def __str__(self) -> str:
         """Print the network."""
