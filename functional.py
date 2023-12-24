@@ -5,15 +5,15 @@ class Function:
     def __call__(self, x):
         raise NotImplementedError("Function.__call__() not implemented.")
 
-    def df(self, x):
-        raise NotImplementedError("Function.df() not implemented.")
+    def derivative(self, x):
+        raise NotImplementedError("Function.derivative() not implemented.")
     
     def __str__(self) -> str:
         raise NotImplementedError("Function.__str__() not implemented.")
 
 
 class Sigmoid(Function):
-    def df(self, x):
+    def derivative(self, x):
         return self.__call__(x) * (1 - self.__call__(x))
 
     def __call__(self, x):
@@ -24,7 +24,7 @@ class Sigmoid(Function):
 
 
 class ReLU(Function):
-    def df(self, x):
+    def derivative(self, x):
         return np.where(x <= 0, 0, 1)
 
     def __call__(self, x):
@@ -35,7 +35,7 @@ class ReLU(Function):
 
 
 class Tanh(Function):
-    def df(self, x):
+    def derivative(self, x):
         return 1 - np.tanh(x) ** 2
 
     def __call__(self, x):
@@ -46,7 +46,7 @@ class Tanh(Function):
 
 
 class Softmax(Function):
-    def df(self, x):
+    def derivative(self, x):
         return self.__call__(x) * (1 - self.__call__(x))
 
     def __call__(self, x):
