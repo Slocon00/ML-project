@@ -10,7 +10,11 @@ class HiddenLayer:
         """
         self.input_size = input_size
         self.units_size = units_size
-
+        self.inputs = None
+        self.net = None
+        self.out = None
+        self.W = None
+        self.b = None
         self.activation = activation
         # Initialize weights and biases
         # TODO: initial initialization of weights and biases is currently random
@@ -29,22 +33,25 @@ class HiddenLayer:
 
     def forward(self, inputs: np.ndarray):
         """Forwards the output of the layer units."""
+        self.inputs = inputs.copy()
         self.net = inputs.dot(self.W) + self.b
         self.out = self.activation(self.net)
         return self.out
 
-    # TODO: implement backpropagation
+    def backward(self, curr_delta: np.ndarray, eta: float):
+        """Backpropagate the error through the layer."""
+        delta = curr_delta * self.activation.derivative(self.net)
+        delta_prop = delta.dot(self.W.T)
+        self.W -= eta * self.inputs.T.dot(delta)
+        self.b -= eta * np.sum(delta, axis=0, keepdims=True)
+        return delta_prop
 
     def __str__(self) -> str:
         """Returns a string description of the layer."""
         return (
             f"HiddenLayer(input_size={self.input_size}, units_size={self.units_size}, "
-            f"activation={self.activation})\nW={self.W}\nb={self.b})"
+            f"activation={self.activation})\nW=\n{self.W}\nb=\n{self.b})"
         )
-    
-    def getW(self) -> str:
-        # print the weights as a matrix
-        return self.W
 
     
 

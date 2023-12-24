@@ -54,3 +54,14 @@ class Softmax(Function):
 
     def __str__(self) -> str:
         return "Softmax"
+
+
+class Identity(Function):
+    def derivative(self, x):
+        return 1
+
+    def __call__(self, x):
+        return x
+
+    def __str__(self) -> str:
+        return "Identity"

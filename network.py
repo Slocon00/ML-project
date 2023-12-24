@@ -28,9 +28,11 @@ class Network:
         for layer in self.layers[1:]:
             o = layer.forward(o)
 
-    def backward(self):
+    def backward(self, curr_delta: np.ndarray, eta=0.1):
         """Backpropagate the error through the network."""
-        pass
+        for layer in reversed(self.layers):
+            delta_prop = layer.backward(curr_delta, eta)
+            curr_delta = delta_prop
 
 
     def check_layers_shape(self, units_size: int, input_size: int):
@@ -44,4 +46,4 @@ class Network:
 
     def __str__(self) -> str:
         """Print the network."""
-        return f"Network: of {self.n_layers} layers. Loss: {self.loss}"
+        return f"Network: {len(self.layers)} layers \nLoss: {self.loss}"

@@ -20,9 +20,7 @@ class Loss:
 
 class MSE(Loss):
     def forward(self, y_pred: np.ndarray, y_true: np.ndarray):
-        # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ CONTROLLARE FLATTEN @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        self.check_shape(y_pred.flatten(), y_true)
-        # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ CONTROLLARE FLATTEN @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        self.check_shape(y_pred, y_true)
         return np.mean((y_pred - y_true) ** 2)
 
     def backward(self, y_pred: np.ndarray, y_true: np.ndarray):
