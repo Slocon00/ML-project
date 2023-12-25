@@ -18,6 +18,8 @@ class Network:
         self.layers = []
         self.loss = loss
 
+        self.inputs = None
+
     def add_layer(self, layer: HiddenLayer):
         """Add a layer to the network."""
         if len(self.layers) > 0:
