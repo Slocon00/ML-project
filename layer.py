@@ -1,4 +1,5 @@
 import numpy as np
+import activations
 
 
 class HiddenLayer:
@@ -7,7 +8,7 @@ class HiddenLayer:
     activation function that is used to calculate the output.
     """
 
-    def __init__(self, input_size, units_size, activation):
+    def __init__(self, input_size: int, units_size: int, activation: activations.Function):
         """Initialize the hidden layer with input_size inputs,
         units_size units, and the specified activation function.
         """
@@ -23,7 +24,7 @@ class HiddenLayer:
         # TODO: initial initialization of weights and biases is currently random
         self.setup(input_size, units_size)
 
-    def setup(self, input_size, units_size):
+    def setup(self, input_size: int, units_size: int):
         """Setup the weights and biases of the layer."""
 
         # Create a weight matrix of appropriate shape; the order is reversed
@@ -57,6 +58,3 @@ class HiddenLayer:
             f"HiddenLayer(input_size={self.input_size}, units_size={self.units_size}, "
             f"activation={self.activation})\nW=\n{self.W}\nb=\n{self.b})"
         )
-
-    
-
