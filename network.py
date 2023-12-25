@@ -1,7 +1,7 @@
 import numpy as np
-
-from layer import HiddenLayer
-from losses import Loss
+import losses
+import activations
+import layer
 
 
 class Network:
@@ -10,7 +10,7 @@ class Network:
     produced output and the expected output.
     """
 
-    def __init__(self, loss: Loss):
+    def __init__(self, loss: losses.Loss):
         """Initialize the network.
         The network is initialized with an empty list of layers and a loss function.
         """
@@ -20,11 +20,18 @@ class Network:
 
         self.inputs = None
 
-    def add_layer(self, layer: HiddenLayer):
-        """Add a layer to the network."""
+    def add_layer(self, input_size, units_size, activation: activations.Function):
+        """Add a layer with the specified parameters to the network."""
         if len(self.layers) > 0:
-            self.check_layers_shape(self.layers[-1].units_size, layer.input_size)
-        self.layers.append(layer)
+            self.check_layers_shape(self.layers[-1].units_size, input_size)
+
+        self.layers.append(
+            layer.HiddenLayer(
+                input_size=input_size,
+                units_size=units_size,
+                activation=activation
+            )
+        )
 
     def forward(self, inputs: np.ndarray):
         """Calculate the output of the neural network by forwarding the inputs
@@ -33,15 +40,15 @@ class Network:
         self.inputs = inputs
 
         o = self.layers[0].forward(inputs)
-        for layer in self.layers[1:]:
-            o = layer.forward(o)
+        for hidden_layer in self.layers[1:]:
+            o = hidden_layer.forward(o)
 
         return o
 
     def backward(self, curr_delta: np.ndarray, eta=0.1):
         """Backpropagate the error through the network."""
-        for layer in reversed(self.layers):
-            delta_prop = layer.backward(curr_delta, eta)
+        for hidden_layer in reversed(self.layers):
+            delta_prop = hidden_layer.backward(curr_delta, eta)
             curr_delta = delta_prop
 
     def check_layers_shape(self, units_size: int, input_size: int):
