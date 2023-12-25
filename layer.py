@@ -33,12 +33,11 @@ class HiddenLayer:
 
         # Create a bias vector of appropriate shape; the first parameter of zeros()
         # is the shape of the array, in this case it is a 1D array with n_neurons elements
-        self.b = np.random.uniform(low=-0.5, high=0.5, size=(1, units_size))
+        self.b = np.random.uniform(low=-0.5, high=0.5, size=(units_size, 1))
 
     def forward(self, inputs: np.ndarray):
         """Forward the output of the layer units."""
-        self.inputs = inputs.copy()
-        self.net = inputs.dot(self.W) + self.b
+        self.net = self.W.T.dot(inputs) + self.b
         self.out = self.activation(self.net)
         return self.out
 
