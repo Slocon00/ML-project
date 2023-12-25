@@ -20,7 +20,7 @@ class Network:
 
     def add_layer(self, layer: HiddenLayer):
         """Add a layer to the network."""
-        if self.get_layer_count() > 0:
+        if len(self.layers) > 0:
             self.check_layers_shape(self.layers[-1].units_size, layer.input_size)
         self.layers.append(layer)
 
@@ -47,9 +47,6 @@ class Network:
                 f"Error: vectors must have same shape."
                 f"The shapes are units_size: {units_size} and input_size: {input_size}"
             )
-
-    def get_layer_count(self):
-        return len(self.layers)
 
     def __str__(self) -> str:
         """Print the network."""
