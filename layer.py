@@ -2,7 +2,10 @@ import numpy as np
 
 
 class HiddenLayer:
-    """Class that represents a hidden layer of the network."""
+    """Class that represents a hidden layer of the network. Each layer has a
+    number of units, each with the same number of weights and inputs, and an
+    activation function that is used to calculate the output.
+    """
 
     def __init__(self, input_size, units_size, activation):
         """Initialize the hidden layer with input_size inputs,
@@ -21,7 +24,7 @@ class HiddenLayer:
         self.setup(input_size, units_size)
 
     def setup(self, input_size, units_size):
-        """Setups the weights and biases of the layer."""
+        """Setup the weights and biases of the layer."""
 
         # Create a weight matrix of appropriate shape; the order is reversed
         # because we want the shape to be (n_inputs, n_neurons)
@@ -32,14 +35,16 @@ class HiddenLayer:
         self.b = np.random.uniform(low=-0.5, high=0.5, size=(1, units_size))
 
     def forward(self, inputs: np.ndarray):
-        """Forwards the output of the layer units."""
+        """Forward the output of the layer units."""
         self.inputs = inputs.copy()
         self.net = inputs.dot(self.W) + self.b
         self.out = self.activation(self.net)
         return self.out
 
     def backward(self, curr_delta: np.ndarray, eta: float):
-        """Backpropagate the error through the layer."""
+        """Backpropagate the error through the layer and update the weights of
+        the layer's units.
+        """
         delta = curr_delta * self.activation.derivative(self.net)
         delta_prop = delta.dot(self.W.T)
         self.W -= eta * self.inputs.T.dot(delta)
@@ -47,7 +52,7 @@ class HiddenLayer:
         return delta_prop
 
     def __str__(self) -> str:
-        """Returns a string description of the layer."""
+        """Return a string description of the layer."""
         return (
             f"HiddenLayer(input_size={self.input_size}, units_size={self.units_size}, "
             f"activation={self.activation})\nW=\n{self.W}\nb=\n{self.b})"

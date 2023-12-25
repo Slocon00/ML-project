@@ -5,6 +5,11 @@ from losses import Loss
 
 
 class Network:
+    """Class that represents a neural network. It has a variable number of
+    hidden layers, and a loss function used to calculate the error between the
+    produced output and the expected output.
+    """
+
     def __init__(self, loss: Loss):
         """Initialize the network.
         The network is initialized with an empty list of layers and a loss function.
@@ -20,6 +25,7 @@ class Network:
         self.layers.append(layer)
 
     def forward(self, inputs: np.ndarray):
+        """Calculate the output of the network."""
         self.inputs = inputs
 
         o = self.layers[0].forward(inputs)
@@ -34,11 +40,12 @@ class Network:
             delta_prop = layer.backward(curr_delta, eta)
             curr_delta = delta_prop
 
-
     def check_layers_shape(self, units_size: int, input_size: int):
+        """Check whether the provided sizes are equal, raising an exception if not."""
         if units_size != input_size:
             raise ValueError(
-                f"Error: vectors must have same shape. The shapes are units_size: {units_size} and input_size: {input_size}"
+                f"Error: vectors must have same shape."
+                f"The shapes are units_size: {units_size} and input_size: {input_size}"
             )
 
     def get_layer_count(self):
