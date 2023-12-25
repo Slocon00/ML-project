@@ -25,14 +25,16 @@ class Network:
         self.layers.append(layer)
 
     def forward(self, inputs: np.ndarray):
-        """Calculate the output of the network."""
+        """Calculate the output of the neural network by forwarding the inputs
+        through the layers.
+        """
         self.inputs = inputs
 
         o = self.layers[0].forward(inputs)
-
-        """Forward the inputs through the network."""
         for layer in self.layers[1:]:
             o = layer.forward(o)
+
+        return o
 
     def backward(self, curr_delta: np.ndarray, eta=0.1):
         """Backpropagate the error through the network."""
