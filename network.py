@@ -61,6 +61,22 @@ class Network:
                 f"The shapes are units_size: {units_size} and input_size: {input_size}"
             )
 
+    def train(
+            self,
+            X_train: np.ndarray,
+            y_train: np.ndarray,
+            batch_size: int,
+            epochs: int,
+            eta: float = 0.1,
+    ):
+        """Train the neural network on the provided training data."""
+        batch_loss = 0
+
+        for epoch in range(epochs):
+            for X, y in zip(X_train, y_train):
+                out = self.forward(X)
+                self.backward(out, self.loss.backward(out, y), eta)
+
     def __str__(self) -> str:
         """Print the network."""
         return f"Network: {len(self.layers)} layers \nLoss: {self.loss}"
