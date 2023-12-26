@@ -21,7 +21,7 @@ class Network:
 
         self.inputs = None
 
-    def add_layer(self, input_size, units_size, activation: Function):
+    def add_layer(self, input_size, units_size, activation: Function, regularizer: Regularizer):
         """Add a layer with the specified parameters to the network."""
         if len(self.layers) > 0:
             self.check_layers_shape(self.layers[-1].units_size, input_size)
@@ -30,7 +30,8 @@ class Network:
             HiddenLayer(
                 input_size=input_size,
                 units_size=units_size,
-                activation=activation
+                activation=activation,
+                regularizer=regularizer
             )
         )
 
