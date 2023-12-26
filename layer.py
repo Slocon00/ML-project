@@ -1,6 +1,6 @@
 import numpy as np
-import activations
-import regularizers
+from activations import Function
+from regularizers import Regularizer
 
 
 class HiddenLayer:
@@ -13,8 +13,8 @@ class HiddenLayer:
             self,
             input_size: int,
             units_size: int,
-            activation: activations.Function,
-            regularizer: regularizers.Regularizer = None
+            activation: Function,
+            regularizer: Regularizer = None
     ):
         """Initialize the hidden layer with input_size inputs,
         units_size units, and the specified activation function.

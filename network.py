@@ -1,7 +1,8 @@
 import numpy as np
-import losses
-import activations
+from losses import Loss
+from activations import Function
 from layer import HiddenLayer
+from regularizers import Regularizer
 
 
 class Network:
@@ -10,7 +11,7 @@ class Network:
     produced output and the expected output.
     """
 
-    def __init__(self, loss: losses.Loss):
+    def __init__(self, loss: Loss):
         """Initialize the network.
         The network is initialized with an empty list of layers and a loss function.
         """
@@ -20,7 +21,7 @@ class Network:
 
         self.inputs = None
 
-    def add_layer(self, input_size, units_size, activation: activations.Function):
+    def add_layer(self, input_size, units_size, activation: Function):
         """Add a layer with the specified parameters to the network."""
         if len(self.layers) > 0:
             self.check_layers_shape(self.layers[-1].units_size, input_size)
