@@ -56,11 +56,13 @@ class HiddenLayer:
         the layer's units.
         """
         delta = curr_delta * self.activation.derivative(self.net)
-        delta_prop = delta.dot(self.W.T)
+        #delta_prop = delta.dot(self.W.T)
+        delta_prop = self.W.dot(delta)
+
         if self.regularizer is not None:
-            self.W -= eta * self.inputs.T.dot(delta) + self.regularizer.derivative(self.W)
+            self.W -= eta * self.inputs.dot(delta.T) + self.regularizer.derivative(self.W)
         else:
-            self.W -= eta * self.inputs.T.dot(delta)
+            self.W -= eta * self.inputs.dot(delta.T)
         # TODO: regularization on the bias?
         self.b -= eta * np.sum(delta, axis=0, keepdims=True)
         return delta_prop
