@@ -54,3 +54,15 @@ class Identity(Function):
 
     def __str__(self) -> str:
         return "Identity"
+
+
+class Softplus(Function):
+    """Softplus activation function: smooth approximation of ReLU."""
+    def derivative(self, x):
+        return 1 / (1 + np.exp(-x))
+
+    def __call__(self, x):
+        return np.log(1 + np.exp(x))
+
+    def __str__(self) -> str:
+        return "Softplus"
