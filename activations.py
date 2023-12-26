@@ -45,17 +45,6 @@ class Tanh(Function):
         return "Tanh"
 
 
-class Softmax(Function):
-    def derivative(self, x):
-        return self.__call__(x) * (1 - self.__call__(x))
-
-    def __call__(self, x):
-        return np.exp(x) / np.sum(np.exp(x), axis=1, keepdims=True)
-
-    def __str__(self) -> str:
-        return "Softmax"
-
-
 class Identity(Function):
     def derivative(self, x):
         return 1

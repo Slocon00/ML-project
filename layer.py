@@ -1,5 +1,6 @@
 import numpy as np
 import activations
+import regularizers
 
 
 class HiddenLayer:
@@ -8,7 +9,13 @@ class HiddenLayer:
     activation function that is used to calculate the output.
     """
 
-    def __init__(self, input_size: int, units_size: int, activation: activations.Function):
+    def __init__(
+            self,
+            input_size: int,
+            units_size: int,
+            activation: activations.Function,
+            regularizer: regularizers.Regularizer = None
+    ):
         """Initialize the hidden layer with input_size inputs,
         units_size units, and the specified activation function.
         """
@@ -20,6 +27,7 @@ class HiddenLayer:
         self.W = None
         self.b = None
         self.activation = activation
+        self.regularizer = regularizer
         # Initialize weights and biases
         # TODO: initial initialization of weights and biases is currently random
         self.setup(input_size, units_size)
@@ -47,7 +55,11 @@ class HiddenLayer:
         """
         delta = curr_delta * self.activation.derivative(self.net)
         delta_prop = delta.dot(self.W.T)
-        self.W -= eta * self.inputs.T.dot(delta)
+        if self.regularizer is not None:
+            self.W -= eta * self.inputs.T.dot(delta) + self.regularizer.derivative(self.W)
+        else:
+            self.W -= eta * self.inputs.T.dot(delta)
+        # TODO: regularization on the bias?
         self.b -= eta * np.sum(delta, axis=0, keepdims=True)
         return delta_prop
 

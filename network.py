@@ -1,7 +1,7 @@
 import numpy as np
 import losses
 import activations
-import layer
+from layer import HiddenLayer
 
 
 class Network:
@@ -26,7 +26,7 @@ class Network:
             self.check_layers_shape(self.layers[-1].units_size, input_size)
 
         self.layers.append(
-            layer.HiddenLayer(
+            HiddenLayer(
                 input_size=input_size,
                 units_size=units_size,
                 activation=activation
@@ -40,15 +40,15 @@ class Network:
         self.inputs = inputs
 
         o = self.layers[0].forward(inputs)
-        for hidden_layer in self.layers[1:]:
-            o = hidden_layer.forward(o)
+        for layer in self.layers[1:]:
+            o = layer.forward(o)
 
         return o
 
     def backward(self, curr_delta: np.ndarray, eta=0.1):
         """Backpropagate the error through the network."""
-        for hidden_layer in reversed(self.layers):
-            delta_prop = hidden_layer.backward(curr_delta, eta)
+        for layer in reversed(self.layers):
+            delta_prop = layer.backward(curr_delta, eta)
             curr_delta = delta_prop
 
     def check_layers_shape(self, units_size: int, input_size: int):
