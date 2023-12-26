@@ -45,6 +45,8 @@ class HiddenLayer:
 
     def forward(self, inputs: np.ndarray):
         """Forward the output of the layer units."""
+        self.inputs = inputs
+
         self.net = self.W.T.dot(inputs) + self.b
         self.out = self.activation(self.net)
         return self.out
