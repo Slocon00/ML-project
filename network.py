@@ -21,7 +21,7 @@ class Network:
 
         self.inputs = None
 
-    def add_layer(self, input_size, units_size, activation: Function, regularizer: Regularizer):
+    def add_layer(self, input_size, units_size, activation: Function, regularizer: Regularizer = None):
         """Add a layer with the specified parameters to the network."""
         if len(self.layers) > 0:
             self.check_layers_shape(self.layers[-1].units_size, input_size)
