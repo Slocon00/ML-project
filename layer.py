@@ -1,6 +1,7 @@
 import numpy as np
 from activations import Function
 from regularizers import Regularizer
+from utils import Starting_values
 
 
 class HiddenLayer:
@@ -13,6 +14,7 @@ class HiddenLayer:
             self,
             input_size: int,
             units_size: int,
+            starting: Starting_values,
             activation: Function,
             regularizer: Regularizer = None
     ):
@@ -26,6 +28,7 @@ class HiddenLayer:
         self.out = None
         self.W = None
         self.b = None
+        self.starting = starting
         self.activation = activation
         self.regularizer = regularizer
         # Initialize weights and biases
@@ -35,9 +38,9 @@ class HiddenLayer:
     def setup(self, input_size: int, units_size: int):
         """Setup the weights and biases of the layer."""
 
-        # Create a weight matrix of appropriate shape; the order is reversed
-        # because we want the shape to be (n_inputs, n_neurons)
-        self.W = np.random.uniform(low=-0.5, high=0.5, size=(input_size, units_size))
+        
+        #self.W = np.random.uniform(low=-0.5, high=0.5, size=(input_size, units_size))
+        self.W = self.starting(input_size, units_size)
 
         # Create a bias vector of appropriate shape; the first parameter of zeros()
         # is the shape of the array, in this case it is a 1D array with n_neurons elements
