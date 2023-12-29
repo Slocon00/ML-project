@@ -38,8 +38,6 @@ class HiddenLayer:
     def setup(self, input_size: int, units_size: int):
         """Setup the weights and biases of the layer."""
 
-        
-        #self.W = np.random.uniform(low=-0.5, high=0.5, size=(input_size, units_size))
         self.W = self.starting(input_size, units_size)
 
         # Create a bias vector of appropriate shape; the first parameter of zeros()
@@ -54,7 +52,7 @@ class HiddenLayer:
         self.out = self.activation(self.net)
         return self.out
 
-    def backward(self, curr_delta: np.ndarray, eta: float):
+    def backward(self, curr_delta: np.ndarray, eta: float = 0.001):
         """Backpropagate the error through the layer and update the weights of
         the layer's units.
         """
