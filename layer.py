@@ -21,6 +21,7 @@ class HiddenLayer:
         """Initialize the hidden layer with input_size inputs,
         units_size units, and the specified activation function.
         """
+
         self.input_size = input_size
         self.units_size = units_size
         self.inputs = None
@@ -28,6 +29,9 @@ class HiddenLayer:
         self.out = None
         self.W = None
         self.b = None
+
+        self.delta_old = 0
+
         self.starting = starting
         self.activation = activation
         self.regularizer = regularizer
@@ -52,18 +56,21 @@ class HiddenLayer:
         self.out = self.activation(self.net)
         return self.out
 
-    def backward(self, curr_delta: np.ndarray, eta: float = 0.001):
+    def backward(self, curr_delta: np.ndarray, eta: float = 10e-4, alpha: float = 10e-4):
         """Backpropagate the error through the layer and update the weights of
         the layer's units.
         """
         delta = curr_delta * self.activation.derivative(self.net)
-        #delta_prop = delta.dot(self.W.T)
+        delta_grad = self.inputs.dot(delta.T)
         delta_prop = self.W.dot(delta)
 
         if self.regularizer is not None:
-            self.W -= eta * self.inputs.dot(delta.T) + self.regularizer.derivative(self.W)
+            self.W -= eta * delta_grad + alpha * self.delta_old + self.regularizer.derivative(self.W)
+            self.delta_old = delta_grad
         else:
-            self.W -= eta * self.inputs.dot(delta.T)
+            self.W -= eta * delta_grad + alpha * self.delta_old
+            self.delta_old = delta_grad
+
         # TODO: regularization on the bias?
         self.b -= eta * np.sum(delta, axis=0, keepdims=True)
         return delta_prop

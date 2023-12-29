@@ -49,10 +49,10 @@ class Network:
 
         return o
 
-    def backward(self, curr_delta: np.ndarray, eta=0.001):
+    def backward(self, curr_delta: np.ndarray, eta: float = 10e-4, alpha: float = 10e-4):
         """Backpropagate the error through the network."""
         for layer in reversed(self.layers):
-            delta_prop = layer.backward(curr_delta, eta)
+            delta_prop = layer.backward(curr_delta, eta, alpha)
             curr_delta = delta_prop
 
     def check_layers_shape(self, units_size: int, input_size: int):
@@ -71,6 +71,7 @@ class Network:
             y_test: np.ndarray,
             epochs: int,
             eta: float = 0.001,
+            alpha: float = 0.001
     ):
         """Train the neural network on the provided training data."""
         losses = []
@@ -86,7 +87,8 @@ class Network:
                 epoch_loss += loss
                 self.backward(
                     self.loss.backward(y_pred=out, y_true=y),
-                    eta=eta
+                    eta=eta,
+                    alpha=alpha
                 )
 
             y_pred = []
