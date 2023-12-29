@@ -49,7 +49,7 @@ class Network:
 
         return o
 
-    def backward(self, curr_delta: np.ndarray, eta=0.1):
+    def backward(self, curr_delta: np.ndarray, eta=0.001):
         """Backpropagate the error through the network."""
         for layer in reversed(self.layers):
             delta_prop = layer.backward(curr_delta, eta)
@@ -67,17 +67,53 @@ class Network:
             self,
             X_train: np.ndarray,
             y_train: np.ndarray,
-            batch_size: int,
+            X_test: np.ndarray,
+            y_test: np.ndarray,
             epochs: int,
-            eta: float = 0.1,
+            eta: float = 0.001,
     ):
         """Train the neural network on the provided training data."""
-        batch_loss = 0
+        losses = []
+        accuracies =[]
 
         for epoch in range(epochs):
+            epoch_loss = 0
+
             for X, y in zip(X_train, y_train):
-                out = self.forward(X)
-                self.backward(out, self.loss.backward(out, y), eta)
+                out = self.forward(inputs=X)
+
+                loss = self.loss.forward(y_pred=out, y_true=y)
+                epoch_loss += loss
+                self.backward(
+                    self.loss.backward(y_pred=out, y_true=y),
+                    eta=eta
+                )
+
+            y_pred = []
+            for X in X_test:
+                out = self.forward(inputs=X)
+                y_pred.append(out)
+            accuracies.append(self.accuracy(y_pred=np.array(y_pred), y_true=y_test))
+
+            losses.append(epoch_loss / len(X_train))
+
+        return losses, accuracies
+
+    def accuracy(self, y_pred: np.ndarray, y_true: np.ndarray):
+        y_pred = y_pred.reshape(len(y_pred), 1)
+        y_true_reshaped = y_true.reshape(len(y_true), 1)
+
+        # TODO adjust threshold depending on activation func
+        for i in range(len(y_pred)):
+            if y_pred[i] > 0.5:
+                y_pred[i] = 1
+            else:
+                y_pred[i] = 0
+
+        # check the accuracy in percentage
+        accuracy = np.sum(y_pred == y_true_reshaped) / len(y_true_reshaped) * 100
+        return accuracy
+
 
     def __str__(self) -> str:
         """Print the network."""
