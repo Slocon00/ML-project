@@ -1,4 +1,6 @@
 import numpy as np
+from tqdm import tqdm
+
 from losses import Loss
 from activations import Function
 from layer import HiddenLayer
@@ -85,26 +87,28 @@ class Network:
         losses = []
         accuracies =[]
 
-        for epoch in range(epochs):
-            epoch_loss = 0
+        with tqdm(total=epochs, desc="Epochs", colour='yellow') as pbar:
+            for epoch in range(epochs):
+                epoch_loss = 0
 
-            for X, y in zip(X_train, y_train):
-                out = self.forward(inputs=X)
+                for X, y in zip(X_train, y_train):
+                    out = self.forward(inputs=X)
 
-                loss = self.loss.forward(y_pred=out, y_true=y)
-                epoch_loss += loss
-                self.backward(
-                    self.loss.backward(y_pred=out, y_true=y),
-                    eta=eta
-                )
+                    loss = self.loss.forward(y_pred=out, y_true=y)
+                    epoch_loss += loss
+                    self.backward(
+                        self.loss.backward(y_pred=out, y_true=y),
+                        eta=eta
+                    )
 
-            y_pred = []
-            for X in X_test:
-                out = self.forward(inputs=X)
-                y_pred.append(out)
-            accuracies.append(self.accuracy(y_pred=np.array(y_pred), y_true=y_test))
+                y_pred = []
+                for X in X_test:
+                    out = self.forward(inputs=X)
+                    y_pred.append(out)
+                accuracies.append(self.accuracy(y_pred=np.array(y_pred), y_true=y_test))
 
-            losses.append(epoch_loss / len(X_train))
+                losses.append(epoch_loss / len(X_train))
+                pbar.update(1)
 
         return losses, accuracies
 
