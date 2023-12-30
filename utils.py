@@ -2,21 +2,35 @@ import numpy as np
 import pandas as pd
 
 class Starting_values:
-    def __init__(self):
-        pass
+    def __init__(self, low: float = -0.5, high: float = 0.5):
+        self.low = low
+        self.high = high
 
     def __call__(self, input_size: int, units_size: int):
         raise NotImplementedError("starting_values.__call__() not implemented.")
 
+    def __str__(self) -> str:
+        raise NotImplementedError("starting_values.__str__() not implemented.")
+
  
 class Range_random(Starting_values):
     def __call__(self, input_size: int, units_size: int):
-        return np.random.uniform(low=-0.5, high=0.5, size=(input_size, units_size))
+        return np.random.uniform(low=self.low, high=self.high, size=(input_size, units_size))
+
+    def __str__(self) -> str:
+        return f"Random uniform in range [{self.low}, {self.high}]"
     
 
 class Fan_in(Starting_values):
     def __call__(self, input_size: int, units_size: int):
-        return np.random.uniform(low=-0.5, high=0.5, size=(input_size, units_size)) * 2 / np.sqrt(input_size)
+        return np.random.uniform(
+            low=self.low,
+            high=self.high,
+            size=(input_size, units_size)
+        ) * 2 / np.sqrt(input_size)
+
+    def __str__(self) -> str:
+        return f"Fan-in in range [{self.low}, {self.high}]"
 
 
 # Controllare slides NN_part_2 pag 12 per altri metodi di inizializzazione

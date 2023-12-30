@@ -16,7 +16,8 @@ class HiddenLayer:
             units_size: int,
             starting: Starting_values,
             activation: Function,
-            regularizer: Regularizer = None
+            regularizer: Regularizer = None,
+            momentum: tuple[str, float] = None
     ):
         """Initialize the hidden layer with input_size inputs,
         units_size units, and the specified activation function.
@@ -30,13 +31,19 @@ class HiddenLayer:
         self.W = None
         self.b = None
 
-        self.delta_old = 0
-
         self.starting = starting
         self.activation = activation
         self.regularizer = regularizer
+
+        # Momentum
+        self.momentum = None
+        self.alpha = 0
+        if momentum is not None:
+            self.delta_old = 0  # for momentum
+            self.momentum = momentum[0]
+            self.alpha = momentum[1]
+
         # Initialize weights and biases
-        # TODO: initial initialization of weights and biases is currently random
         self.setup(input_size, units_size)
 
     def setup(self, input_size: int, units_size: int):
@@ -78,6 +85,11 @@ class HiddenLayer:
     def __str__(self) -> str:
         """Return a string description of the layer."""
         return (
-            f"HiddenLayer(input_size={self.input_size}, units_size={self.units_size}, "
-            f"activation={self.activation})\nW=\n{self.W}\nb=\n{self.b})"
+            f"Hidden layer of {self.units_size} units."
+            f"\n\nInput size: {self.input_size}"
+            f"\nStarting: {self.starting}"
+            f"\nActivation: {self.activation}"
+            f"\nRegularizer: {self.regularizer}"
+            f"\nMomentum: {self.momentum} with alpha {self.alpha}"
+            f"\n\nW = \n{self.W}\n\nb = \n{self.b})"
         )
