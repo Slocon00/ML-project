@@ -22,7 +22,15 @@ class Network:
 
         self.inputs = None
 
-    def add_layer(self, input_size, units_size, starting: Starting_values, activation: Function, regularizer: Regularizer = None):
+    def add_layer(
+            self,
+            input_size,
+            units_size,
+            starting: Starting_values,
+            activation: Function,
+            regularizer: Regularizer = None,
+            momentum: tuple[str, float] = None
+    ):
         """Add a layer with the specified parameters to the network."""
         if len(self.layers) > 0:
             self.check_layers_shape(self.layers[-1].units_size, input_size)
@@ -33,7 +41,8 @@ class Network:
                 units_size=units_size,
                 starting=starting,
                 activation=activation,
-                regularizer=regularizer
+                regularizer=regularizer,
+                momentum=momentum
             )
         )
 
@@ -49,10 +58,10 @@ class Network:
 
         return o
 
-    def backward(self, curr_delta: np.ndarray, eta: float = 10e-4, alpha: float = 10e-4):
+    def backward(self, curr_delta: np.ndarray, eta: float = 10e-4):
         """Backpropagate the error through the network."""
         for layer in reversed(self.layers):
-            delta_prop = layer.backward(curr_delta, eta, alpha)
+            delta_prop = layer.backward(curr_delta, eta)
             curr_delta = delta_prop
 
     def check_layers_shape(self, units_size: int, input_size: int):
@@ -70,8 +79,7 @@ class Network:
             X_test: np.ndarray,
             y_test: np.ndarray,
             epochs: int,
-            eta: float = 0.001,
-            alpha: float = 0.001
+            eta: float = 0.001
     ):
         """Train the neural network on the provided training data."""
         losses = []
@@ -87,8 +95,7 @@ class Network:
                 epoch_loss += loss
                 self.backward(
                     self.loss.backward(y_pred=out, y_true=y),
-                    eta=eta,
-                    alpha=alpha
+                    eta=eta
                 )
 
             y_pred = []

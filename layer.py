@@ -38,10 +38,12 @@ class HiddenLayer:
         # Momentum
         self.momentum = None
         self.alpha = 0
+        self.delta_old = 0
         if momentum is not None:
-            self.delta_old = 0  # for momentum
             self.momentum = momentum[0]
             self.alpha = momentum[1]
+            if self.momentum not in ['Nesterov', 'Standard']:
+                raise ValueError("Momentum must be either 'Nesterov' or 'Standard'.")
 
         # Initialize weights and biases
         self.setup(input_size, units_size)
@@ -63,20 +65,27 @@ class HiddenLayer:
         self.out = self.activation(self.net)
         return self.out
 
-    def backward(self, curr_delta: np.ndarray, eta: float = 10e-4, alpha: float = 10e-4):
+    def backward(self, curr_delta: np.ndarray, eta: float = 10e-4):
         """Backpropagate the error through the layer and update the weights of
         the layer's units.
         """
         delta = curr_delta * self.activation.derivative(self.net)
         delta_grad = self.inputs.dot(delta.T)
+
+        alpha = self.alpha
+        W = self.W.copy() # we want to regularize only on the original weights
+        if self.momentum == 'Nesterov':
+            self.W += alpha * self.delta_old
+            alpha = 0
+
         delta_prop = self.W.dot(delta)
 
         if self.regularizer is not None:
-            self.W -= eta * delta_grad + alpha * self.delta_old + self.regularizer.derivative(self.W)
-            self.delta_old = delta_grad
+            self.W -= eta * delta_grad - alpha * self.delta_old + self.regularizer.derivative(W)
+            self.delta_old = - delta_grad #TODO: sign is correct?
         else:
-            self.W -= eta * delta_grad + alpha * self.delta_old
-            self.delta_old = delta_grad
+            self.W -= eta * delta_grad - alpha * self.delta_old
+            self.delta_old = - delta_grad #TODO: sign is correct?
 
         # TODO: regularization on the bias?
         self.b -= eta * np.sum(delta, axis=0, keepdims=True)
