@@ -52,9 +52,6 @@ class HiddenLayer:
         """Setup the weights and biases of the layer."""
 
         self.W = self.starting(input_size, units_size)
-
-        # Create a bias vector of appropriate shape; the first parameter of zeros()
-        # is the shape of the array, in this case it is a 1D array with n_neurons elements
         self.b = np.random.uniform(low=-0.5, high=0.5, size=(units_size, 1))
 
     def forward(self, inputs: np.ndarray):

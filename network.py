@@ -127,12 +127,6 @@ class Network:
         accuracy = np.sum(y_pred == y_true_reshaped) / len(y_true_reshaped) * 100
         return accuracy
 
-    def reset(self):
-        np.random.seed(42)
-        """Reset the weights and bias of all the layers in the network."""
-        for layer in self.layers:
-            layer.setup(layer.input_size, layer.units_size)
-
     def __str__(self) -> str:
         """Print the network."""
         return f"Network: {len(self.layers)} layers \nLoss: {self.loss}"
