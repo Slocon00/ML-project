@@ -78,39 +78,74 @@ class Network:
             self,
             X_train: np.ndarray,
             y_train: np.ndarray,
-            X_test: np.ndarray,
-            y_test: np.ndarray,
+            X_val: np.ndarray,
+            y_val: np.ndarray,
             epochs: int,
             eta: float = 0.001
     ):
-        """Train the neural network on the provided training data."""
-        losses = []
-        accuracies =[]
+        """Train the neural network on the provided training data. Losses and
+        accuracies are calculated for each epoch (both for training and
+        validation sets), and then returned as part of a single dictionary.
+        """
+        # TODO add early stopping
+        tr_losses = []
+        tr_accuracies = []
+        val_losses = []
+        val_accuracies = []
 
         with tqdm(total=epochs, desc="Epochs", colour='yellow') as pbar:
             for epoch in range(epochs):
-                epoch_loss = 0
-
+                # Training the network
                 for X, y in zip(X_train, y_train):
                     out = self.forward(inputs=X)
-
-                    loss = self.loss.forward(y_pred=out, y_true=y)
-                    epoch_loss += loss
                     self.backward(
                         self.loss.backward(y_pred=out, y_true=y),
                         eta=eta
                     )
 
-                y_pred = []
-                for X in X_test:
-                    out = self.forward(inputs=X)
-                    y_pred.append(out)
-                accuracies.append(self.accuracy(y_pred=np.array(y_pred), y_true=y_test))
+                # Calculating loss and accuracy for the epoch
+                # Training loss and acc
+                tr_pred = []
+                for X in X_train:
+                    out = self.forward(X)
+                    tr_pred.append(out)
+                tr_pred = np.array(tr_pred)
 
-                losses.append(epoch_loss / len(X_train))
+                tr_losses.append(self.loss.forward(
+                    y_pred=tr_pred,
+                    y_true=y_train
+                ))
+                tr_accuracies.append(self.accuracy(
+                    y_pred=tr_pred,
+                    y_true=y_train
+                ))
+
+                # Validation loss and acc
+                val_pred = []
+                for X in X_val:
+                    out = self.forward(X)
+                    val_pred.append(out)
+                val_pred = np.array(val_pred)
+
+                val_losses.append(self.loss.forward(
+                    y_pred=val_pred,
+                    y_true=y_val
+                ))
+                val_accuracies.append(self.accuracy(
+                    y_pred=val_pred,
+                    y_true=y_val
+                ))
+
                 pbar.update(1)
 
-        return losses, accuracies
+        statistics = {
+            'tr_losses': tr_losses,
+            'tr_accuracies': tr_accuracies,
+            'val_losses': val_losses,
+            'val_accuracies': val_accuracies
+        }
+
+        return statistics
 
     def accuracy(self, y_pred: np.ndarray, y_true: np.ndarray):
         y_pred = y_pred.reshape(len(y_pred), 1)
