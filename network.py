@@ -81,6 +81,7 @@ class Network:
             X_val: np.ndarray,
             y_val: np.ndarray,
             epochs: int,
+            patience: int,
             eta: float = 0.001
     ):
         """Train the neural network on the provided training data. Losses and
@@ -94,6 +95,8 @@ class Network:
         val_accuracies = []
 
         with tqdm(total=epochs, desc="Epochs", colour='yellow') as pbar:
+            lowest = np.inf  # Variable that stores the lowest loss recorded
+
             for epoch in range(epochs):
                 # Training the network
                 for X, y in zip(X_train, y_train):
@@ -105,36 +108,34 @@ class Network:
 
                 # Calculating loss and accuracy for the epoch
                 # Training loss and acc
-                tr_pred = []
-                for X in X_train:
-                    out = self.forward(X)
-                    tr_pred.append(out)
-                tr_pred = np.array(tr_pred)
-
-                tr_losses.append(self.loss.forward(
-                    y_pred=tr_pred,
-                    y_true=y_train
-                ))
-                tr_accuracies.append(self.accuracy(
-                    y_pred=tr_pred,
-                    y_true=y_train
-                ))
+                tr_loss, tr_acc = self.statistics(X_train, y_train)
+                tr_losses.append(tr_loss)
+                tr_accuracies.append(tr_acc)
 
                 # Validation loss and acc
-                val_pred = []
-                for X in X_val:
-                    out = self.forward(X)
-                    val_pred.append(out)
-                val_pred = np.array(val_pred)
+                val_loss, val_acc = self.statistics(X_val, y_val)
+                val_losses.append(val_loss)
+                val_accuracies.append(val_acc)
 
-                val_losses.append(self.loss.forward(
-                    y_pred=val_pred,
-                    y_true=y_val
-                ))
-                val_accuracies.append(self.accuracy(
-                    y_pred=val_pred,
-                    y_true=y_val
-                ))
+                # Check early stopping condition
+                if val_loss < lowest:
+                    lowest = val_loss
+                    epochs_since_lowest = 0
+
+                    # Record all the layers' weights and bias that correspond to
+                    # the lowest validation loss
+                    best_W = []
+                    best_b = []
+                    for layer in self.layers:
+                        best_W.append(layer.W.copy())
+                        best_b.append(layer.b.copy())
+                else:
+                    epochs_since_lowest += 1
+
+                if epochs_since_lowest >= patience:
+                    # Early stopping cond is true
+                    # TODO force network with optimal W and b? Or return them?
+                    break
 
                 pbar.update(1)
 
@@ -146,6 +147,20 @@ class Network:
         }
 
         return statistics
+
+    def statistics(self, X, y):
+        """Calculate loss and accuracy for the given input and output data."""
+        pred = []
+        for X in X:
+            out = self.forward(X)
+            pred.append(out)
+        pred = np.array(pred)
+
+        loss = self.loss.forward(y_pred=pred, y_true=y)
+        accuracy = self.accuracy(y_pred=pred, y_true=y)
+
+        return loss, accuracy
+
 
     def accuracy(self, y_pred: np.ndarray, y_true: np.ndarray):
         y_pred = y_pred.reshape(len(y_pred), 1)
