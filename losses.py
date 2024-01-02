@@ -60,3 +60,4 @@ class BinaryCrossEntropy(Loss):
     
     def __str__(self) -> str:
         return "BinaryCrossEntropy"
+

@@ -98,6 +98,9 @@ class Network:
         tr_metrics = []
         val_losses = []
         val_metrics = []
+        epochs_since_lowest = 0
+        best_W = []
+        best_b = []
 
         with tqdm(total=epochs, desc="Epochs", colour='yellow') as pbar:
             lowest = np.inf  # Variable that stores the lowest loss recorded
@@ -132,13 +135,13 @@ class Network:
                         best_W.append(layer.W.copy())
                         best_b.append(layer.b.copy())
                 else:
-                    epochs_since_lowest += 1
+                    epochs_since_lowest = epochs_since_lowest + 1
 
                 if epochs_since_lowest >= patience:
                     # Early stopping cond is true
-                    for i, layer in enumerate(self.layers):
+                    """for i, layer in enumerate(self.layers):
                         layer.W = best_W[i]
-                        layer.b = best_b[i]
+                        layer.b = best_b[i]"""
                     break
 
                 pbar.update(1)
