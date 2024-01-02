@@ -6,7 +6,7 @@ from activations import Function
 from layer import HiddenLayer
 from regularizers import Regularizer
 from utils import Starting_values
-
+from metrics import Metric
 
 class Network:
     """Class that represents a neural network. It has a variable number of
@@ -87,6 +87,7 @@ class Network:
             y_val: np.ndarray,
             epochs: int,
             patience: int,
+            metric: Metric
     ):
         """Train the neural network on the provided training data. Losses and
         accuracies are calculated for each epoch (both for training and
@@ -94,9 +95,9 @@ class Network:
         """
 
         tr_losses = []
-        tr_accuracies = []
+        tr_metrics = []
         val_losses = []
-        val_accuracies = []
+        val_metrics = []
 
         with tqdm(total=epochs, desc="Epochs", colour='yellow') as pbar:
             lowest = np.inf  # Variable that stores the lowest loss recorded
@@ -109,14 +110,14 @@ class Network:
 
                 # Calculating loss and accuracy for the epoch
                 # Training loss and acc
-                tr_loss, tr_acc = self.statistics(X_train, y_train)
+                tr_loss, tr_acc = self.statistics(X_train, y_train, metric)
                 tr_losses.append(tr_loss)
-                tr_accuracies.append(tr_acc)
+                tr_metrics.append(tr_acc)
 
                 # Validation loss and acc
-                val_loss, val_acc = self.statistics(X_val, y_val)
+                val_loss, val_acc = self.statistics(X_val, y_val, metric)
                 val_losses.append(val_loss)
-                val_accuracies.append(val_acc)
+                val_metrics.append(val_acc)
 
                 # Check early stopping condition
                 if val_loss < lowest:
@@ -144,14 +145,14 @@ class Network:
 
         statistics = {
             'tr_losses': tr_losses,
-            'tr_accuracies': tr_accuracies,
+            'tr_metrics': tr_metrics,
             'val_losses': val_losses,
-            'val_accuracies': val_accuracies
+            'val_metrics': val_metrics
         }
 
         return statistics
 
-    def statistics(self, X, y):
+    def statistics(self, X, y, metric: Metric):
         """Calculate loss and accuracy for the given input and output data."""
         pred = []
         for x in X:
@@ -160,24 +161,9 @@ class Network:
         pred = np.array(pred)
 
         loss = self.loss.forward(y_pred=pred, y_true=y)
-        accuracy = self.accuracy(y_pred=pred, y_true=y)
+        metric_eval = metric(y_pred=pred, y_true=y)
 
-        return loss, accuracy
-
-    def accuracy(self, y_pred: np.ndarray, y_true: np.ndarray):
-        y_pred = y_pred.reshape(len(y_pred), 1)
-        y_true_reshaped = y_true.reshape(len(y_true), 1)
-
-        # TODO adjust threshold depending on activation func
-        for i in range(len(y_pred)):
-            if y_pred[i] > 0.5:
-                y_pred[i] = 1
-            else:
-                y_pred[i] = 0
-
-        # check the accuracy in percentage
-        accuracy = np.sum(y_pred == y_true_reshaped) / len(y_true_reshaped) * 100
-        return accuracy
+        return loss, metric_eval
 
     def __str__(self) -> str:
         """Print the network."""

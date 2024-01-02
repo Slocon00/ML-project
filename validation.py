@@ -1,4 +1,5 @@
 from network import Network
+from metrics import Metric
 from regularizers import *
 from losses import *
 from utils import *
@@ -11,6 +12,7 @@ def kfold_crossval(
         y: np.ndarray,
         k: int,
         net: Network,
+        metric: Metric,
         epochs: int = 1000,
         patience: int = 25,
         seed: int = None
@@ -32,9 +34,9 @@ def kfold_crossval(
     eta = net.eta
 
     tr_losses = []
-    tr_accuracies = []
+    tr_metrics = []
     val_losses = []
-    val_accuracies = []
+    val_metrics = []
 
     X_split = np.array_split(X, k)
     y_split = np.array_split(y, k)
@@ -57,24 +59,28 @@ def kfold_crossval(
             y_val,
             epochs=epochs,
             patience=patience,
+            metric=metric
         )
+
+
         plt.plot(info['tr_losses'], label='Train Loss')
         plt.plot(info['val_losses'], label='Val Loss')
         plt.legend()
         plt.show()
 
-        plt.plot(info['tr_accuracies'], label='Train Acc')
-        plt.plot(info['val_accuracies'], label='Val Acc')
+        plt.plot(info['tr_metrics'], label='Train Acc')
+        plt.plot(info['val_metrics'], label='Val Acc')
         plt.legend()
         plt.show()
+        # TODO remove these ^
 
-        tr_loss, tr_acc = net.statistics(X_train, y_train)
-        val_loss, val_acc = net.statistics(X_val, y_val)
+        tr_loss, tr_metric = net.statistics(X_train, y_train, metric)
+        val_loss, val_metric = net.statistics(X_val, y_val, metric)
 
         tr_losses.append(tr_loss)
-        tr_accuracies.append(tr_acc)
+        tr_metrics.append(tr_metric)
         val_losses.append(val_loss)
-        val_accuracies.append(val_acc)
+        val_metrics.append(val_metric)
 
         net = create_net(
             seed=seed,
@@ -91,12 +97,13 @@ def kfold_crossval(
 
     statistics = {
         'tr_loss': np.mean(tr_losses),
-        'tr_accuracy': np.mean(tr_accuracies),
+        'tr_metric': np.mean(tr_metrics),
         'val_loss': np.mean(val_losses),
-        'val_accuracy': np.mean(val_accuracies)
+        'val_metric': np.mean(val_metrics)
     }
 
     return statistics
+
 
 def create_net(
         seed: int,
