@@ -36,7 +36,7 @@ class Fan_in(Starting_values):
 # Controllare slides NN_part_2 pag 12 per altri metodi di inizializzazione
 
 def read_monk(train_path, test_path):
-    """Read the monk's problems train and test datasets, and preprocess the input
+    """Read the monk's problems training and test datasets, and preprocess the input
     data with one-hot encoding.
     """
 
@@ -58,3 +58,38 @@ def read_monk(train_path, test_path):
     y_test.shape = (len(y_test), 1, 1)
 
     return X_train, X_test, y_train, y_test
+
+
+def read_cup(train_path, test_path):
+    """Read the ML CUP training and test datasets."""
+
+    inputs = ['x1', 'x2', 'x3', 'x4', 'x5', 'x6', 'x7', 'x8', 'x9', 'x10']
+    outputs = ['y1', 'y2', 'y3']
+    df_tr = pd.read_csv(
+        train_path,
+        skipinitialspace=True,
+        sep=',',
+        comment='#',
+        index_col=0,
+        names=inputs + outputs
+    )
+
+    df_ts = pd.read_csv(
+        test_path,
+        skipinitialspace=True,
+        sep=',',
+        comment='#',
+        index_col=0,
+        names=inputs
+    )
+
+    X_train = df_tr[inputs].values
+    test = df_ts[inputs].values
+
+    y_train = df_tr[outputs].values
+
+    X_train.shape = (len(X_train), 10, 1)
+    y_train.shape = (len(y_train), 3, 1)
+    test.shape = (len(test), 10, 1)
+
+    return X_train, y_train, test
