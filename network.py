@@ -23,6 +23,7 @@ class Network:
         self.loss = loss
 
         self.inputs = None
+        self.eta = None
 
     def add_layer(
             self,
@@ -74,6 +75,10 @@ class Network:
                 f"The shapes are units_size: {units_size} and input_size: {input_size}"
             )
 
+    def set_eta(self, eta: float):
+        """Set the learning rate of the network."""
+        self.eta = eta
+        
     def train(
             self,
             X_train: np.ndarray,
@@ -118,6 +123,7 @@ class Network:
                 val_accuracies.append(val_acc)
 
                 # Check early stopping condition
+                #TODO: threshold early stopping?
                 if val_loss < lowest:
                     lowest = val_loss
                     epochs_since_lowest = 0
