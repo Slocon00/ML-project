@@ -14,7 +14,7 @@ class Network:
     produced output and the expected output.
     """
 
-    def __init__(self, loss: Loss):
+    def __init__(self, loss: Loss, eta: float = 0.001):
         """Initialize the network.
         The network is initialized with an empty list of layers and a loss function.
         """
@@ -23,7 +23,7 @@ class Network:
         self.loss = loss
 
         self.inputs = None
-        self.eta = None
+        self.eta = eta
 
     def add_layer(
             self,
@@ -61,10 +61,10 @@ class Network:
 
         return o
 
-    def backward(self, curr_delta: np.ndarray, eta: float = 10e-4):
+    def backward(self, curr_delta: np.ndarray):
         """Backpropagate the error through the network."""
         for layer in reversed(self.layers):
-            delta_prop = layer.backward(curr_delta, eta)
+            delta_prop = layer.backward(curr_delta, self.eta)
             curr_delta = delta_prop
 
     def check_layers_shape(self, units_size: int, input_size: int):
@@ -87,13 +87,12 @@ class Network:
             y_val: np.ndarray,
             epochs: int,
             patience: int,
-            eta: float = 0.001
     ):
         """Train the neural network on the provided training data. Losses and
         accuracies are calculated for each epoch (both for training and
         validation sets), and then returned as part of a single dictionary.
         """
-        # TODO add early stopping
+
         tr_losses = []
         tr_accuracies = []
         val_losses = []
@@ -106,10 +105,7 @@ class Network:
                 # Training the network
                 for X, y in zip(X_train, y_train):
                     out = self.forward(inputs=X)
-                    self.backward(
-                        self.loss.backward(y_pred=out, y_true=y),
-                        eta=eta
-                    )
+                    self.backward(self.loss.backward(y_pred=out, y_true=y))
 
                 # Calculating loss and accuracy for the epoch
                 # Training loss and acc
@@ -123,7 +119,6 @@ class Network:
                 val_accuracies.append(val_acc)
 
                 # Check early stopping condition
-                #TODO: threshold early stopping?
                 if val_loss < lowest:
                     lowest = val_loss
                     epochs_since_lowest = 0
@@ -140,7 +135,9 @@ class Network:
 
                 if epochs_since_lowest >= patience:
                     # Early stopping cond is true
-                    # TODO force network with optimal W and b? Or return them?
+                    for i, layer in enumerate(self.layers):
+                        layer.W = best_W[i]
+                        layer.b = best_b[i]
                     break
 
                 pbar.update(1)
@@ -157,8 +154,8 @@ class Network:
     def statistics(self, X, y):
         """Calculate loss and accuracy for the given input and output data."""
         pred = []
-        for X in X:
-            out = self.forward(X)
+        for x in X:
+            out = self.forward(x)
             pred.append(out)
         pred = np.array(pred)
 
@@ -166,7 +163,6 @@ class Network:
         accuracy = self.accuracy(y_pred=pred, y_true=y)
 
         return loss, accuracy
-
 
     def accuracy(self, y_pred: np.ndarray, y_true: np.ndarray):
         y_pred = y_pred.reshape(len(y_pred), 1)
