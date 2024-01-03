@@ -120,7 +120,7 @@ def create_net(
 ) -> Network:
     """Create a network with the specified parameters."""
     np.random.seed(seed)
-    net = Network(loss)
+    net = Network(loss, eta=eta)
 
     layers_size.insert(0, input_size)  # this way we don't have to check if we are in the first hidden layer
 
