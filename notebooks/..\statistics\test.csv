@@ -1,3 +1,0 @@
-Loss func,Size,Activation,Starting,Range,Regularizer,lambda,Momentum,Eta,tLoss,tMetric,vLoss,vMetric
-MSE,"[16, 16, 3]",ReLU,Range_random,"(-0.5, 0.5)",L1,0.0001,"('Standard', 1e-06)",0.0001,5.570807407259731,3.4601090081199377,5.7606646572739315,3.5237349570097667
-MSE,"[16, 16, 3]",ReLU,Range_random,"(-0.5, 0.5)",L1,1e-06,"('Standard', 1e-06)",0.0001,0.5892491344408877,1.1482130945803932,0.8074404855509268,1.320189783095008
