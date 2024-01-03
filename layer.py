@@ -99,3 +99,5 @@ class HiddenLayer:
             f"\nMomentum: {self.momentum} with alpha {self.alpha}"
             f"\n\nW = \n{self.W}\n\nb = \n{self.b})"
         )
+    
+            

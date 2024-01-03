@@ -149,9 +149,9 @@ class Network:
 
                 if epochs_since_lowest >= patience:
                     # Early stopping cond is true
-                    """for i, layer in enumerate(self.layers):
+                    for i, layer in enumerate(self.layers):
                         layer.W = best_W[i]
-                        layer.b = best_b[i]"""
+                        layer.b = best_b[i]
                     break
 
                 pbar.update(1)
