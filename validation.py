@@ -30,7 +30,8 @@ def kfold_crossval(
         starting.append(layer.starting)
         activations.append(layer.activation)
         regularizers.append(layer.regularizer)
-        momentums.append((layer.momentum, layer.alpha))
+        momentums.append((layer.momentum, layer.alpha) if 
+                         layer.momentum is not None else None)
     eta = net.eta
 
     tr_losses = []
@@ -162,20 +163,36 @@ def create_all_net(seed: int,
     layers_size.insert(0, input_size)  # this way we don't have to check if we are in the first hidden layer
 
     # convert string list into objects list
-
+    regularizers_ = []
+    momentums_ = []
     
+    # starting and activations cannot be None
     starting = [eval(starting[i])(starting_range[i][0], starting_range[i][1]) for i in range(len(starting))]
     activations = [eval(activations[i])() for i in range(len(activations))]
-    regularizers = [eval(regularizers[i])(lambda_=regularizers_lambda[i]) for i in range(len(regularizers))]
+
+    # We could choose to not have momentum and regularizer for some layers
+    for i, reg in enumerate(regularizers):
+        if reg != "None":
+            regularizers_.append(eval(reg)(lambda_=regularizers_lambda[i]))
+        else:
+            regularizers_.append(None)
+    #regularizers = [eval(regularizers[i])(lambda_=regularizers_lambda[i]) for i in range(len(regularizers))]
+
+    for m in momentums:
+        if m[0] != "None":
+            momentums_.append(m)
+        else:
+            momentums_.append(None)
+
 
     for i in range(num_layer):
         net.add_layer(
             input_size=layers_size[i],
             units_size=layers_size[i + 1],
             starting=starting[i],
-            regularizer=regularizers[i],
+            regularizer=regularizers_[i],
             activation=activations[i],
-            momentum=momentums[i]
+            momentum=momentums_[i]
         )
 
     net.set_eta(eta)  # we could set the seed here
@@ -185,6 +202,9 @@ def create_all_net(seed: int,
     del starting
     del activations
     del regularizers
+    del momentums
+    del regularizers_
+    del momentums_
 
     return net
 
