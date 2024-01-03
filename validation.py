@@ -155,12 +155,15 @@ def create_all_net(seed: int,
                    ) -> Network:
     """Create a network with the specified parameters."""
     np.random.seed(seed)
+    
+    loss = eval(loss)(batch_size=batch_size)
     net = Network(loss)
 
     layers_size.insert(0, input_size)  # this way we don't have to check if we are in the first hidden layer
 
     # convert string list into objects list
 
+    
     starting = [eval(starting[i])(starting_range[i][0], starting_range[i][1]) for i in range(len(starting))]
     activations = [eval(activations[i])() for i in range(len(activations))]
     regularizers = [eval(regularizers[i])(lambda_=regularizers_lambda[i]) for i in range(len(regularizers))]
@@ -177,6 +180,7 @@ def create_all_net(seed: int,
 
     net.set_eta(eta)  # we could set the seed here
 
+    layers_size.pop(0)
     # destroy all objects for safety
     del starting
     del activations
