@@ -1,4 +1,5 @@
 import numpy as np
+import time
 from tqdm import tqdm
 
 from losses import Loss
@@ -7,6 +8,8 @@ from layer import HiddenLayer
 from regularizers import Regularizer
 from utils import Starting_values
 from metrics import Metric
+
+#from IPython.display import clear_output
 
 class Network:
     """Class that represents a neural network. It has a variable number of
@@ -110,6 +113,13 @@ class Network:
                 for X, y in zip(X_train, y_train):
                     out = self.forward(inputs=X)
                     self.backward(self.loss.backward(y_pred=out, y_true=y))
+
+                    # togliere fine debug @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+                    #print(self.layers[0], end='\r')
+                    #time.sleep(0.1)
+
+                    # togliere fine debug @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
                 # Calculating loss and accuracy for the epoch
                 # Training loss and acc
