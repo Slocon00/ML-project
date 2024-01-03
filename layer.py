@@ -39,7 +39,6 @@ class HiddenLayer:
         self.momentum = None
         self.alpha = 0
         self.delta_old = 0
-        print(momentum)
         if momentum is not None:
             self.momentum = momentum[0]
             self.alpha = momentum[1]
