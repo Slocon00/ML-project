@@ -17,7 +17,7 @@ class Network:
     produced output and the expected output.
     """
 
-    def __init__(self, loss: Loss, eta: float = 0.001):
+    def __init__(self, loss: Loss, eta: float = 0.001, tau = 1000):
         """Initialize the network.
         The network is initialized with an empty list of layers and a loss function.
         """
@@ -27,6 +27,8 @@ class Network:
 
         self.inputs = None
         self.eta = eta
+        self.tau = tau
+        self.eta_tau = eta
 
     def add_layer(
             self,
@@ -64,7 +66,11 @@ class Network:
 
         return o
 
-    def backward(self, curr_delta: np.ndarray):
+    def backward(self, curr_delta: np.ndarray, step: int):
+        """adjust the learning rate of the network."""
+        alpha = step / self.tau
+        self.eta_tau = (1 - alpha) * self.eta + alpha * self.eta_tau
+
         """Backpropagate the error through the network."""
         for layer in reversed(self.layers):
             delta_prop = layer.backward(curr_delta, self.eta)
@@ -112,7 +118,7 @@ class Network:
                 # Training the network
                 for X, y in zip(X_train, y_train):
                     out = self.forward(inputs=X)
-                    self.backward(self.loss.backward(y_pred=out, y_true=y))
+                    self.backward(self.loss.backward(y_pred=out, y_true=y, step = epoch))
 
                     # togliere fine debug @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
