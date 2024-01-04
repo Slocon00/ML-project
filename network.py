@@ -118,7 +118,7 @@ class Network:
                 # Training the network
                 for X, y in zip(X_train, y_train):
                     out = self.forward(inputs=X)
-                    self.backward(self.loss.backward(y_pred=out, y_true=y, step = epoch))
+                    self.backward(self.loss.backward(y_pred=out, y_true=y), epoch)
 
                     # togliere fine debug @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 

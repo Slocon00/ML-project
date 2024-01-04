@@ -15,7 +15,8 @@ def kfold_crossval(
         metric: Metric,
         epochs: int = 1000,
         patience: int = 25,
-        seed: int = None
+        seed: int = None,
+        comb= dict
 ):
     # Saving parameters needed to reset the net for each fold
     loss = net.loss
@@ -63,7 +64,7 @@ def kfold_crossval(
             metric=metric
         )
 
-
+        print(*comb.values())
         plt.plot(info['tr_losses'], label='Train Loss')
         plt.plot(info['val_losses'], label='Val Loss')
         plt.legend()
@@ -73,6 +74,12 @@ def kfold_crossval(
         plt.plot(info['val_metrics'], label='Val Acc')
         plt.legend()
         plt.show()
+        print(f"Fold {i + 1} of {k} completed")
+        print(f"Train Loss: {info['tr_losses'][-1]}")
+        print(f"Train Acc: {info['tr_metrics'][-1]}")
+        print(f"Val Loss: {info['val_losses'][-1]}")
+        print(f"Val Acc: {info['val_metrics'][-1]}")
+
         # TODO remove these ^
 
         tr_loss, tr_metric = net.statistics(X_train, y_train, metric)
