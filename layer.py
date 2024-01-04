@@ -79,10 +79,10 @@ class HiddenLayer:
 
         if self.regularizer is not None:
             self.W -= eta * delta_grad - alpha * self.delta_old + self.regularizer.derivative(W)
-            self.delta_old = - delta_grad #TODO: sign is correct?
+            self.delta_old = - (eta*delta_grad) #TODO: sign is correct?
         else:
             self.W -= eta * delta_grad - alpha * self.delta_old
-            self.delta_old = - delta_grad #TODO: sign is correct?
+            self.delta_old = - (eta *delta_grad) #TODO: sign is correct?
 
         # TODO: regularization on the bias?
         self.b -= eta * np.sum(delta, axis=0, keepdims=True)
