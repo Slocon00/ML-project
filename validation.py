@@ -16,7 +16,7 @@ def kfold_crossval(
         epochs: int = 1000,
         patience: int = 25,
         seed: int = None,
-        comb= dict
+        verbose: bool = False
 ):
     # Saving parameters needed to reset the net for each fold
     loss = net.loss
@@ -64,24 +64,6 @@ def kfold_crossval(
             metric=metric
         )
 
-        print(*comb.values())
-        plt.plot(info['tr_losses'], label='Train Loss')
-        plt.plot(info['val_losses'], label='Val Loss')
-        plt.legend()
-        plt.show()
-
-        plt.plot(info['tr_metrics'], label='Train Acc')
-        plt.plot(info['val_metrics'], label='Val Acc')
-        plt.legend()
-        plt.show()
-        print(f"Fold {i + 1} of {k} completed")
-        print(f"Train Loss: {info['tr_losses'][-1]}")
-        print(f"Train Acc: {info['tr_metrics'][-1]}")
-        print(f"Val Loss: {info['val_losses'][-1]}")
-        print(f"Val Acc: {info['val_metrics'][-1]}")
-
-        # TODO remove these ^
-
         tr_loss, tr_metric = net.statistics(X_train, y_train, metric)
         val_loss, val_metric = net.statistics(X_val, y_val, metric)
 
@@ -89,6 +71,23 @@ def kfold_crossval(
         tr_metrics.append(tr_metric)
         val_losses.append(val_loss)
         val_metrics.append(val_metric)
+
+        if verbose:
+            plt.plot(info['tr_losses'], label='Train Loss')
+            plt.plot(info['val_losses'], label='Val Loss')
+            plt.legend()
+            plt.show()
+
+            plt.plot(info['tr_metrics'], label='Train Metric')
+            plt.plot(info['val_metrics'], label='Val Metric')
+            plt.legend()
+            plt.show()
+
+            print(f"Fold {i + 1} of {k} completed")
+            print(f"Train Loss: {tr_loss}")
+            print(f"Train Metric: {tr_metric}")
+            print(f"Val Loss: {val_loss}")
+            print(f"Val Metric: {val_metric}")
 
         net = create_net(
             seed=seed,
