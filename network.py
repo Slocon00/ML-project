@@ -96,7 +96,8 @@ class Network:
             y_val: np.ndarray,
             epochs: int,
             patience: int,
-            metric: Metric
+            metric: Metric,
+            k: int
     ):
         """Train the neural network on the provided training data. Losses and
         accuracies are calculated for each epoch (both for training and
@@ -110,6 +111,9 @@ class Network:
         epochs_since_lowest = 0
         best_W = []
         best_b = []
+        for layer in self.layers:
+            best_W.append(layer.W.copy())
+            best_b.append(layer.b.copy())
 
         with tqdm(total=epochs, desc="Epochs", colour='yellow') as pbar:
             lowest = np.inf  # Variable that stores the lowest loss recorded
@@ -118,7 +122,15 @@ class Network:
                 # Training the network
                 for X, y in zip(X_train, y_train):
                     out = self.forward(inputs=X)
-                    self.backward(self.loss.backward(y_pred=out, y_true=y), epoch)
+                    self.backward(self.loss.backward(y_pred=out, y_true=y), epoch+1)
+                    """if k >= 4:
+                        for layer in self.layers:
+                            print("W:\n",layer.W)
+                            print("b:\n",layer.b)
+                        print("out:\n",out)
+                        print("y:\n",y)
+                        print("loss deriv:\n",self.loss.backward(y_pred=out, y_true=y))"""
+
 
                     # togliere fine debug @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 

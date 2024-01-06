@@ -13,7 +13,7 @@ def kfold_crossval(
         k: int,
         net: Network,
         metric: Metric,
-        epochs: int = 1000,
+        epochs: int = 500,
         patience: int = 25,
         seed: int = None,
         verbose: bool = False
@@ -61,7 +61,8 @@ def kfold_crossval(
             y_val,
             epochs=epochs,
             patience=patience,
-            metric=metric
+            metric=metric,
+            k=i,
         )
 
         tr_loss, tr_metric = net.statistics(X_train, y_train, metric)

@@ -25,7 +25,7 @@ class MSE(Loss):
 
     def backward(self, y_pred: np.ndarray, y_true: np.ndarray):
         self.check_shape(y_pred, y_true)
-        return 2 * (y_pred - y_true) / self.batch_size
+        return (y_pred - y_true) #/ self.batch_size
     
     def __str__(self) -> str:
         return "MSE"
