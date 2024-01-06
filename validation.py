@@ -62,7 +62,6 @@ def kfold_crossval(
             epochs=epochs,
             patience=patience,
             metric=metric,
-            k=i,
         )
 
         tr_loss, tr_metric = net.statistics(X_train, y_train, metric)

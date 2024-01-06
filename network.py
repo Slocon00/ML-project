@@ -97,7 +97,6 @@ class Network:
             epochs: int,
             patience: int,
             metric: Metric,
-            k: int
     ):
         """Train the neural network on the provided training data. Losses and
         accuracies are calculated for each epoch (both for training and

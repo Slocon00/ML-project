@@ -12,7 +12,7 @@ def grid_search(hyperparams: dict,
                 loss: Loss,
                 k: int = 5,
                 seed: int = None,
-                epochs: int = 500,
+                epochs: int = 10000,
                 patience: int = 250,
                 verbose: bool = False
                 ):
