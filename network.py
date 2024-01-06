@@ -68,12 +68,14 @@ class Network:
 
     def backward(self, curr_delta: np.ndarray, step: int):
         """adjust the learning rate of the network."""
+        if step > self.tau:
+            step = self.tau
         alpha = step / self.tau
         self.eta_tau = (1 - alpha) * self.eta + alpha * self.eta_tau
 
         """Backpropagate the error through the network."""
         for layer in reversed(self.layers):
-            delta_prop = layer.backward(curr_delta, self.eta)
+            delta_prop = layer.backward(curr_delta, self.eta_tau)
             curr_delta = delta_prop
 
     def check_layers_shape(self, units_size: int, input_size: int):
