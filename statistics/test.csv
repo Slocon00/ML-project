@@ -35,3 +35,22 @@ MSE,"[16, 16, 16, 3]",ReLU,Range_random,"(-0.5, 0.5)",L2,1e-08,"('Standard', 0.0
 
 "[32, 32, 3]",ReLU,Range_random,"(-0.5, 0.5)",L1,1e-07,"('Nesterov', 0.0001)",0.0001,0.20604409865226345,0.6742899937881631,0.40118372420881826,0.8812396528738288
 "[32, 32, 3]",ReLU,Range_random,"(-0.5, 0.5)",L1,1e-07,"('Nesterov', 1e-06)",0.0001,0.24236081296855103,0.7341187697910377,0.46261640407509447,0.9536440405805405
+
+
+MSE, "[32, 32, 3]", ReLU, Range_random, "(-0.5, 0.5)", L2, 1e-06, "('Standard', 0.9)" ,0.01, 6.427579891894152e-05, 0.012183003329507577, 0.00011676299434683748, 0.015467994026832908
+Combination: [32, 32, 3] ReLU Range_random (-0.5, 0.5) L2 1e-06 ('Standard', 0.9) 0.0001
+Statistics: {'tr_loss': 0.0010463515217760011, 'tr_metric': 0.04845497888765238, 'val_loss': 0.001084506573735372, 'val_metric': 0.04935277410979347}
+Combination: [32, 32, 3] ReLU Range_random (-0.5, 0.5) L2 1e-06 ('Nesterov', 0.9) 0.01
+Statistics: {'tr_loss': 6.984195248277143e-05, 'tr_metric': 0.012691799091673929, 'val_loss': 0.00011592869378643544, 'val_metric': 0.015775156851155023}
+Combination: [32, 32, 3] ReLU Range_random (-0.5, 0.5) L2 1e-06 ('Nesterov', 0.9) 0.0001
+Statistics: {'tr_loss': 0.001046630772808892, 'tr_metric': 0.048458803682934204, 'val_loss': 0.0010845600902212118, 'val_metric': 0.04935333080975115}
+Combination: [32, 32, 3] ReLU Range_random (-0.5, 0.5) L2 0.0001 ('Standard', 0.9) 0.01
+Statistics: {'tr_loss': 0.0014165971886349665, 'tr_metric': 0.057855563784640664, 'val_loss': 0.0014673683102129247, 'val_metric': 0.05883200792848612}
+Combination: [32, 32, 3] ReLU Range_random (-0.5, 0.5) L2 0.0001 ('Standard', 0.9) 0.0001
+Statistics: {'tr_loss': 0.0412889262494237, 'tr_metric': 0.32600911806463, 'val_loss': 0.041620035215609856, 'val_metric': 0.3272631137596131}
+Combination: [32, 32, 3] ReLU Range_random (-0.5, 0.5) L2 0.0001 ('Nesterov', 0.9) 0.01
+Statistics: {'tr_loss': 0.0014157469602666696, 'tr_metric': 0.057876230964759356, 'val_loss': 0.0014718912220069687, 'val_metric': 0.05893044993280181}
+Combination: [32, 32, 3] ReLU Range_random (-0.5, 0.5) L2 0.0001 ('Nesterov', 0.9) 0.0001
+Statistics: {'tr_loss': 0.041287962998805, 'tr_metric': 0.32600669081691735, 'val_loss': 0.04161900897377978, 'val_metric': 0.32726007268703966}
+Combination: [64, 64, 3] ReLU Range_random (-0.5, 0.5) L2 1e-06 ('Standard', 0.9) 0.01
+5 fold crashato!!!!!!!!!!!!!!!!!!!!!!!!
