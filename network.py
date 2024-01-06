@@ -28,7 +28,7 @@ class Network:
         self.inputs = None
         self.eta = eta
         self.tau = tau
-        self.eta_tau = eta
+        self.eta_tau = eta * 0.01
 
     def add_layer(
             self,
@@ -71,11 +71,11 @@ class Network:
         if step > self.tau:
             step = self.tau
         alpha = step / self.tau
-        self.eta_tau = (1 - alpha) * self.eta + alpha * self.eta_tau
+        eta_step = (1 - alpha) * self.eta + alpha * self.eta_tau
 
         """Backpropagate the error through the network."""
         for layer in reversed(self.layers):
-            delta_prop = layer.backward(curr_delta, self.eta_tau)
+            delta_prop = layer.backward(curr_delta, eta_step)
             curr_delta = delta_prop
 
     def check_layers_shape(self, units_size: int, input_size: int):
@@ -99,6 +99,7 @@ class Network:
             epochs: int,
             patience: int,
             metric: Metric,
+            thresh: float = 0.01
     ):
         """Train the neural network on the provided training data. Losses and
         accuracies are calculated for each epoch (both for training and
@@ -152,7 +153,7 @@ class Network:
                 val_metrics.append(val_acc)
 
                 # Check early stopping condition
-                if val_loss < lowest:
+                if val_loss < (lowest - lowest*thresh) or lowest == np.inf:
                     lowest = val_loss
                     epochs_since_lowest = 0
 
