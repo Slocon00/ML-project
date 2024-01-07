@@ -76,6 +76,7 @@ def grid_search(hyperparams: dict,
         )
 
         if verbose:
+            print('Combination:', *combination.values())
             print('Statistics:', statistics)
             print("\n\n\n")
         data_to_csv.append(list(combination.values()) + list(statistics.values()))
