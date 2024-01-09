@@ -14,6 +14,7 @@ def grid_search(hyperparams: dict,
                 seed: int = None,
                 epochs: int = 10000,
                 patience: int = 250,
+                scaler=None,
                 verbose: bool = False
                 ):
     data_to_csv = [[]]
@@ -72,6 +73,7 @@ def grid_search(hyperparams: dict,
             patience=patience,
             seed=seed,
             metric=metric,
+            scaler=scaler,
             verbose=verbose
         )
 
