@@ -62,7 +62,7 @@ class HiddenLayer:
         self.out = self.activation(self.net)
         return self.out
 
-    def backward(self, curr_delta: np.ndarray, eta: float = 10e-4):
+    def backward(self, curr_delta: np.ndarray, eta: float = 1e-1):
         """Backpropagate the error through the layer and update the weights of
         the layer's units.
         """
@@ -70,12 +70,14 @@ class HiddenLayer:
         delta_grad = self.inputs.dot(delta.T)
 
         alpha = self.alpha
-        W = self.W.copy() # we want to regularize only on the original weights
+        W = self.W.copy()  # We want to regularize only on the original weights
         if self.momentum == 'Nesterov':
             self.W += alpha * self.delta_old
             alpha = 0
 
         delta_prop = self.W.dot(delta)
+
+        # Update weights
         if self.regularizer is not None:
             self.W -= eta * delta_grad - alpha * self.delta_old + self.regularizer.derivative(W)
             self.delta_old = - (eta * delta_grad)
@@ -83,6 +85,7 @@ class HiddenLayer:
             self.W -= eta * delta_grad - alpha * self.delta_old
             self.delta_old = - (eta * delta_grad)
 
+        # Update bias
         self.b -= eta * delta
         return delta_prop
 
@@ -97,5 +100,3 @@ class HiddenLayer:
             f"\nMomentum: {self.momentum} with alpha {self.alpha}"
             f"\n\nW = \n{self.W}\n\nb = \n{self.b})"
         )
-    
-            

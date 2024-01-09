@@ -1,5 +1,4 @@
 import numpy as np
-import time
 from tqdm import tqdm
 
 from losses import Loss
@@ -9,7 +8,6 @@ from regularizers import Regularizer
 from utils import Starting_values
 from metrics import Metric
 
-#from IPython.display import clear_output
 
 class Network:
     """Class that represents a neural network. It has a variable number of
@@ -17,7 +15,7 @@ class Network:
     produced output and the expected output.
     """
 
-    def __init__(self, loss: Loss, eta: float = 0.001, tau = 1000):
+    def __init__(self, loss: Loss, eta: float = 1e-1, tau: int = 1000):
         """Initialize the network.
         The network is initialized with an empty list of layers and a loss function.
         """
@@ -67,13 +65,14 @@ class Network:
         return o
 
     def backward(self, curr_delta: np.ndarray, step: int):
-        """adjust the learning rate of the network."""
+        """Backpropagate the error through the network."""
+
+        # Adjust the learning rate of the network."""
         if step > self.tau:
             step = self.tau
         alpha = step / self.tau
         eta_step = (1 - alpha) * self.eta + alpha * self.eta_tau
 
-        """Backpropagate the error through the network."""
         for layer in reversed(self.layers):
             delta_prop = layer.backward(curr_delta, eta_step)
             curr_delta = delta_prop

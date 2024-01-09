@@ -17,6 +17,12 @@ def grid_search(hyperparams: dict,
                 scaler=None,
                 verbose: bool = False
                 ):
+    """Perform a grid search using all the hyperparameters defined in hyperparams,
+    using k-fold cross validation to evaluate the performance of a net given
+    each possible combination of hyperparameters; return the results in string
+    format in a list.
+    """
+
     data_to_csv = [[]]
 
     # Create a list of all the possible combinations using itertools.product

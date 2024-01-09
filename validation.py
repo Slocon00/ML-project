@@ -1,10 +1,11 @@
+import numpy as np
+import matplotlib.pyplot as plt
 from network import Network
 from metrics import Metric
-from regularizers import *
-from losses import *
-from utils import *
-from activations import *
-import matplotlib.pyplot as plt
+from regularizers import Regularizer
+from losses import Loss
+from utils import Starting_values
+from activations import Function
 
 
 def kfold_crossval(
@@ -19,6 +20,11 @@ def kfold_crossval(
         scaler=None,
         verbose: bool = False,
 ):
+    """Perform k-fold cross validation training the given network with the given
+    parameters, and return the mean loss and metric values found across all k
+    folds.
+    """
+
     # Saving parameters needed to reset the net for each fold
     loss = net.loss
     num_layer = len(net.layers)
@@ -32,7 +38,7 @@ def kfold_crossval(
         starting.append(layer.starting)
         activations.append(layer.activation)
         regularizers.append(layer.regularizer)
-        momentums.append((layer.momentum, layer.alpha) if 
+        momentums.append((layer.momentum, layer.alpha) if
                          layer.momentum is not None else None)
     eta = net.eta
 
@@ -66,6 +72,8 @@ def kfold_crossval(
         )
 
         if scaler:
+            # Calculate loss and metric undoing the
+            # normalization done on the output
             y_pred_train = []
             y_pred_val = []
             for x in X_train:
@@ -128,6 +136,7 @@ def kfold_crossval(
             print(f"Val Loss: {val_loss}")
             print(f"Val Metric: {val_metric}")
 
+        # Reset the net
         net = create_net(
             seed=seed,
             loss=loss,
@@ -163,7 +172,7 @@ def create_net(
         momentums: list[tuple[str, float]],
         eta: float,
 ) -> Network:
-    """Create a network with the specified parameters."""
+    """Create a network with the specified parameters (provided as objects)."""
     np.random.seed(seed)
     net = Network(loss, eta=eta)
 
@@ -199,9 +208,9 @@ def create_all_net(seed: int,
                    momentums: list[tuple[str, float]],
                    eta: float,
                    ) -> Network:
-    """Create a network with the specified parameters."""
+    """Create a network with the specified parameters (provided as strings)."""
     np.random.seed(seed)
-    
+
     loss = eval(loss)(batch_size=batch_size)
     net = Network(loss)
 
@@ -210,7 +219,7 @@ def create_all_net(seed: int,
     # convert string list into objects list
     regularizers_ = []
     momentums_ = []
-    
+
     # starting and activations cannot be None
     starting = [eval(starting[i])(starting_range[i][0], starting_range[i][1]) for i in range(len(starting))]
     activations = [eval(activations[i])() for i in range(len(activations))]
@@ -221,14 +230,12 @@ def create_all_net(seed: int,
             regularizers_.append(eval(reg)(lambda_=regularizers_lambda[i]))
         else:
             regularizers_.append(None)
-    #regularizers = [eval(regularizers[i])(lambda_=regularizers_lambda[i]) for i in range(len(regularizers))]
 
     for m in momentums:
         if m[0] != "None":
             momentums_.append(m)
         else:
             momentums_.append(None)
-
 
     for i in range(num_layer):
         net.add_layer(
@@ -243,6 +250,7 @@ def create_all_net(seed: int,
     net.set_eta(eta)  # we could set the seed here
 
     layers_size.pop(0)
+
     # destroy all objects for safety
     del starting
     del activations
@@ -252,28 +260,3 @@ def create_all_net(seed: int,
     del momentums_
 
     return net
-
-'''# Reset the network
-        net = Network(loss=loss)
-
-        input_size = len(X[0])
-        for j in range(n_layers - 1):
-            net.add_layer(
-                input_size=input_size,
-                units_size=n_units[j],
-                starting=starting,
-                regularizer=regularizer,
-                activation=ReLU(),
-                momentum=momentum
-            )
-            input_size = n_units[j]
-
-        # Output layer
-        net.add_layer(
-            input_size=input_size,
-            units_size=output_size,
-            starting=starting,
-            regularizer=regularizer,
-            activation=Sigmoid(),
-            momentum=momentum
-        )'''

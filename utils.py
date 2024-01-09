@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 class Starting_values:
     def __init__(self, low: float = -0.5, high: float = 0.5):
         self.low = low
@@ -12,14 +13,14 @@ class Starting_values:
     def __str__(self) -> str:
         raise NotImplementedError("starting_values.__str__() not implemented.")
 
- 
+
 class Range_random(Starting_values):
     def __call__(self, input_size: int, units_size: int):
         return np.random.uniform(low=self.low, high=self.high, size=(input_size, units_size))
 
     def __str__(self) -> str:
         return f"Random uniform in range [{self.low}, {self.high}]"
-    
+
 
 class Fan_in(Starting_values):
     def __call__(self, input_size: int, units_size: int):
@@ -61,7 +62,7 @@ def read_monk(train_path, test_path):
 
 
 def read_cup(train_path, test_path):
-    """Read the ML CUP training and test datasets."""
+    """Read the ML CUP training and blind test datasets."""
 
     inputs = ['x1', 'x2', 'x3', 'x4', 'x5', 'x6', 'x7', 'x8', 'x9', 'x10']
     outputs = ['y1', 'y2', 'y3']
