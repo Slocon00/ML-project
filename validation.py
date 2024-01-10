@@ -189,8 +189,6 @@ def create_net(
         )
     layers_size.pop(0)
 
-    net.set_eta(eta)  # we could set the seed here
-
     return net
 
 
@@ -212,7 +210,7 @@ def create_all_net(seed: int,
     np.random.seed(seed)
 
     loss = eval(loss)(batch_size=batch_size)
-    net = Network(loss)
+    net = Network(loss, eta=eta)
 
     layers_size.insert(0, input_size)  # this way we don't have to check if we are in the first hidden layer
 
@@ -246,8 +244,6 @@ def create_all_net(seed: int,
             activation=activations[i],
             momentum=momentums_[i]
         )
-
-    net.set_eta(eta)  # we could set the seed here
 
     layers_size.pop(0)
 

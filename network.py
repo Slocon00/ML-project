@@ -84,10 +84,6 @@ class Network:
                 f"Error: vectors must have same shape."
                 f"The shapes are units_size: {units_size} and input_size: {input_size}"
             )
-
-    def set_eta(self, eta: float):
-        """Set the learning rate of the network."""
-        self.eta = eta
         
     def train(
             self,
