@@ -120,14 +120,20 @@ def kfold_crossval(
         val_metrics.append(val_metric)
 
         if verbose:
+
+            plt.figure(figsize=(10,5))
+
+            plt.subplot(1, 2, 1)
             plt.plot(info['tr_losses'], label='Train Loss')
             plt.plot(info['val_losses'], label='Val Loss')
             plt.legend()
-            plt.show()
 
+            plt.subplot(1, 2, 2)
             plt.plot(info['tr_metrics'], label='Train Metric')
             plt.plot(info['val_metrics'], label='Val Metric')
             plt.legend()
+
+            plt.tight_layout()
             plt.show()
 
             print(f"Fold {i + 1} of {k} completed")
