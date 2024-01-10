@@ -2,10 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from network import Network
 from metrics import Metric
-from regularizers import Regularizer
-from losses import Loss
-from utils import Starting_values
-from activations import Function
+from regularizers import *
+from losses import *
+from utils import *
+from activations import *
 
 
 def kfold_crossval(
