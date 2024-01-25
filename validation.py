@@ -21,8 +21,8 @@ def kfold_crossval(
         verbose: bool = False,
 ):
     """Perform k-fold cross validation training the given network with the given
-    parameters, and return the mean loss and metric values found across all k
-    folds.
+    parameters, and return the mean and std of loss and metric values found
+    across all k folds.
     """
 
     # Saving parameters needed to reset the net for each fold
@@ -146,7 +146,11 @@ def kfold_crossval(
         'tr_loss': np.mean(tr_losses),
         'tr_metric': np.mean(tr_metrics),
         'val_loss': np.mean(val_losses),
-        'val_metric': np.mean(val_metrics)
+        'val_metric': np.mean(val_metrics),
+        'tr_loss_std': np.std(tr_losses),
+        'tr_metric_std': np.std(tr_metrics),
+        'val_loss_std': np.std(val_losses),
+        'val_metric_std': np.std(val_metrics),
     }
 
     return statistics
