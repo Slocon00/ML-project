@@ -64,12 +64,15 @@ class Network:
 
         return o
 
-    def backward(self, curr_delta: np.ndarray, step: int):
+    def backward(self, curr_delta: np.ndarray, step: int, cycle = 1000):
         """Backpropagate the error through the network."""
-
+        
         # Adjust the learning rate of the network."""
         if step > self.tau:
             step = self.tau
+
+        step = step % cycle
+
         alpha = step / self.tau
         eta_step = (1 - alpha) * self.eta + alpha * self.eta_tau
 
