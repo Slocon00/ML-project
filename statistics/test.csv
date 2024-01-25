@@ -181,8 +181,19 @@ tau: 1000
 eta_tau: 5e-06"
 "10, 512, ReLU
 Fan-in in range [-0.5, 0.5], L2 with lambda 1e-08
-Nesterov, 0.99","512, 128, ReLU
+Nesterov, 0.99",
+"512, 128, ReLU
 Fan-in in range [-0.5, 0.5], L2 with lambda 1e-08
-Nesterov, 0.99","128, 3, Identity
+Nesterov, 0.99",
+"128, 3, Identity
 Random uniform in range [-0.5, 0.5], L2 with lambda 1e-08
 Nesterov, 0.99"
+
+{'tr_loss': 0.011940902184285394,
+ 'tr_metric': 0.1649992095407621,
+ 'val_loss': 0.20535927577819266,
+ 'val_metric': 0.5633717692956074,
+ 'tr_loss_std': 0.0014506695636280402,
+ 'tr_metric_std': 0.009799128196900545,
+ 'val_loss_std': 0.02844855303825556,
+ 'val_metric_std': 0.03391333347912511}

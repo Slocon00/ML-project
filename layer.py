@@ -103,5 +103,5 @@ class HiddenLayer:
     
     def to_csv(self) -> str:
         """Return a list of the layer's parameters."""
-        return (f"{self.input_size}, {self.units_size}, {self.activation}\n{self.starting},"
+        return (f"\n{self.input_size}, {self.units_size}, {self.activation}\n{self.starting},"
                 f" {self.regularizer}\n{self.momentum}, {self.alpha}")
