@@ -15,7 +15,7 @@ class Network:
     produced output and the expected output.
     """
 
-    def __init__(self, loss: Loss, eta: float = 1e-1, tau: int = 1000):
+    def __init__(self, loss: Loss, eta: float = 1e-1, tau: int = 1000, cyclic: bool = False):
         """Initialize the network.
         The network is initialized with an empty list of layers and a loss function.
         """
@@ -27,6 +27,8 @@ class Network:
         self.eta = eta
         self.tau = tau
         self.eta_tau = eta * 0.01
+        self.cyclic = cyclic
+        self.n_cycles = -1 # counter for the number of cycles
 
     def add_layer(
             self,
@@ -64,17 +66,21 @@ class Network:
 
         return o
 
-    def backward(self, curr_delta: np.ndarray, step: int, cycle = 1000):
+    def backward(self, curr_delta: np.ndarray, step: int):
         """Backpropagate the error through the network."""
         
         # Adjust the learning rate of the network."""
-        if step > self.tau:
-            step = self.tau
 
-        step = step % cycle
-
-        alpha = step / self.tau
-        eta_step = (1 - alpha) * self.eta + alpha * self.eta_tau
+        if self.cyclic:
+            if step % self.tau == 0:
+                self.n_cycles += 1
+            step = step % self.tau # cycle of tau = 1000
+            eta_step = self.eta_tau + 0.5 * (self.eta / 2**self.n_cycles - self.eta_tau) * (1 + np.cos(np.pi * step / self.tau))
+        else: # linear decay of eta
+            if step > self.tau:
+                step = self.tau
+            alpha = step / self.tau
+            eta_step = (1 - alpha) * self.eta + alpha * self.eta_tau
 
         for layer in reversed(self.layers):
             delta_prop = layer.backward(curr_delta, eta_step)

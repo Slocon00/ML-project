@@ -41,6 +41,8 @@ def kfold_crossval(
         momentums.append((layer.momentum, layer.alpha) if
                          layer.momentum is not None else None)
     eta = net.eta
+    tau = net.tau
+    cyclic = net.cyclic
 
     tr_losses = []
     tr_metrics = []
@@ -139,7 +141,9 @@ def kfold_crossval(
             activations=activations,
             regularizers=regularizers,
             momentums=momentums,
-            eta=eta
+            eta=eta,
+            tau=tau,
+            cyclic=cyclic,
         )
 
     statistics = {
@@ -167,10 +171,12 @@ def create_net(
         regularizers: list[Regularizer],
         momentums: list[tuple[str, float]],
         eta: float,
+        tau: int = 1000,
+        cyclic: bool = False,
 ) -> Network:
     """Create a network with the specified parameters (provided as objects)."""
     np.random.seed(seed)
-    net = Network(loss, eta=eta)
+    net = Network(loss, eta=eta, tau=tau, cyclic=cyclic)
 
     layers_size.insert(0, input_size)  # this way we don't have to check if we are in the first hidden layer
 
