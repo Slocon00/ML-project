@@ -100,3 +100,8 @@ class HiddenLayer:
             f"\nMomentum: {self.momentum} with alpha {self.alpha}"
             f"\n\nW = \n{self.W}\n\nb = \n{self.b})"
         )
+    
+    def to_csv(self) -> str:
+        """Return a list of the layer's parameters."""
+        return (f"{self.input_size}, {self.units_size}, {self.activation}\n{self.starting},"
+                f" {self.regularizer}\n{self.momentum}, {self.alpha}")

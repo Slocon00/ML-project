@@ -170,3 +170,19 @@ L2,1e-08,
  'val_metric_std': 0.037615062343082595}
 
 
+"512, 128, ReLU
+Fan-in in range [-0.5, 0.5], L2 with lambda 1e-08
+Nesterov, 0.99","128, 3, Identity
+Random uniform in range [-0.5, 0.5], L2 with lambda 1e-08
+Nesterov, 0.99"
+"MSE
+eta: 0.0005
+tau: 1000
+eta_tau: 5e-06"
+"10, 512, ReLU
+Fan-in in range [-0.5, 0.5], L2 with lambda 1e-08
+Nesterov, 0.99","512, 128, ReLU
+Fan-in in range [-0.5, 0.5], L2 with lambda 1e-08
+Nesterov, 0.99","128, 3, Identity
+Random uniform in range [-0.5, 0.5], L2 with lambda 1e-08
+Nesterov, 0.99"

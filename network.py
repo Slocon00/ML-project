@@ -208,3 +208,11 @@ class Network:
     def __str__(self) -> str:
         """Print the network."""
         return f"Network: {len(self.layers)} layers \nLoss: {self.loss}"
+    
+    def to_csv(self):
+        return (
+                f"{self.loss}\n"
+                f"eta: {self.eta}\n"
+                f"tau: {self.tau}\n"
+                f"eta_tau: {self.eta_tau}"
+                )
