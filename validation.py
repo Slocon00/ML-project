@@ -120,21 +120,7 @@ def kfold_crossval(
         val_metrics.append(val_metric)
 
         if verbose:
-
-            plt.figure(figsize=(10,5))
-
-            plt.subplot(1, 2, 1)
-            plt.plot(info['tr_losses'], label='Train Loss')
-            plt.plot(info['val_losses'], label='Val Loss')
-            plt.legend()
-
-            plt.subplot(1, 2, 2)
-            plt.plot(info['tr_metrics'], label='Train Metric')
-            plt.plot(info['val_metrics'], label='Val Metric')
-            plt.legend()
-
-            plt.tight_layout()
-            plt.show()
+            show_plots(info)
 
             print(f"Fold {i + 1} of {k} completed")
             print(f"Train Loss: {tr_loss}")
@@ -262,3 +248,20 @@ def create_all_net(seed: int,
     del momentums_
 
     return net
+
+
+def show_plots(statistics):
+    plt.figure(figsize=(10, 5))
+
+    plt.subplot(1, 2, 1)
+    plt.plot(statistics['tr_losses'], label='Train Loss')
+    plt.plot(statistics['val_losses'], label='Val Loss')
+    plt.legend()
+
+    plt.subplot(1, 2, 2)
+    plt.plot(statistics['tr_metrics'], label='Train Metric')
+    plt.plot(statistics['val_metrics'], label='Val Metric')
+    plt.legend()
+
+    plt.tight_layout()
+    plt.show()
