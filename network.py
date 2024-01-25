@@ -91,13 +91,13 @@ class Network:
             y_train: np.ndarray,
             X_val: np.ndarray,
             y_val: np.ndarray,
-            epochs: int,
-            patience: int,
             metric: Metric,
+            epochs: int,
+            patience: int = np.inf,
             thresh: float = 0.01
     ):
         """Train the neural network on the provided training data. Losses and
-        accuracies are calculated for each epoch (both for training and
+        metrics are calculated for each epoch (both for training and
         validation sets), and then returned as part of a single dictionary.
         """
 
@@ -164,12 +164,15 @@ class Network:
 
                 if epochs_since_lowest >= patience:
                     # Early stopping cond is true
-                    for i, layer in enumerate(self.layers):
-                        layer.W = best_W[i]
-                        layer.b = best_b[i]
                     break
 
                 pbar.update(1)
+
+        # Network is set with the weights/bias associated with the lowest
+        # val loss
+        for i, layer in enumerate(self.layers):
+            layer.W = best_W[i]
+            layer.b = best_b[i]
 
         statistics = {
             'tr_losses': tr_losses,
