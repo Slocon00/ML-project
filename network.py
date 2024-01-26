@@ -32,7 +32,8 @@ class Network:
         self.tau = tau
         self.eta_tau = eta * 0.01
         self.cyclic = cyclic
-        self.n_cycles = -1 # counter for the number of cycles
+        self.n_cycles = 0 # counter for the number of cycles
+        self.cycle_flag = False
 
     def add_layer(
             self,
@@ -76,7 +77,12 @@ class Network:
         # Adjust the learning rate of the network
         if self.cyclic:
             if step % self.tau == 0:
-                self.n_cycles += 1
+                if not self.cycle_flag:
+                    self.cycle_flag = True
+                    self.n_cycles += 1
+                    print(f"Cycle {self.n_cycles} completed.")
+            else:
+                self.cycle_flag = False
             step = step % self.tau # cycle of tau = 1000
             eta_step = self.eta_tau + 0.5 * (self.eta / 2**self.n_cycles - self.eta_tau) * (1 + np.cos(np.pi * step / self.tau))
         else:
