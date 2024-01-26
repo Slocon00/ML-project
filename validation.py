@@ -73,48 +73,8 @@ def kfold_crossval(
             metric=metric,
         )
 
-        if scaler:
-            # Calculate loss and metric undoing the
-            # normalization done on the output
-            y_pred_train = []
-            y_pred_val = []
-            for x in X_train:
-                out = net.forward(x)
-                y_pred_train.append(out)
-
-            for x in X_val:
-                out = net.forward(x)
-                y_pred_val.append(out)
-
-            y_pred_train = np.array(y_pred_train)
-            y_pred_val = np.array(y_pred_val)
-
-            y_pred_train = y_pred_train.reshape(y_pred_train.shape[0], y_pred_train.shape[1])
-            y_pred_train = scaler.inverse_transform(y_pred_train)
-            y_pred_train = y_pred_train.reshape(y_pred_train.shape[0], y_pred_train.shape[1], 1)
-
-            y_train_rescaled = y_train.copy()
-            y_train_rescaled = y_train_rescaled.reshape(y_train_rescaled.shape[0], y_train_rescaled.shape[1])
-            y_train_rescaled = scaler.inverse_transform(y_train_rescaled)
-            y_train_rescaled = y_train_rescaled.reshape(y_train_rescaled.shape[0], y_train_rescaled.shape[1], 1)
-
-            y_pred_val = y_pred_val.reshape(y_pred_val.shape[0], y_pred_val.shape[1])
-            y_pred_val = scaler.inverse_transform(y_pred_val)
-            y_pred_val = y_pred_val.reshape(y_pred_val.shape[0], y_pred_val.shape[1], 1)
-
-            y_val_rescaled = y_val.copy()
-            y_val_rescaled = y_val_rescaled.reshape(y_val_rescaled.shape[0], y_val_rescaled.shape[1])
-            y_val_rescaled = scaler.inverse_transform(y_val_rescaled)
-            y_val_rescaled = y_val_rescaled.reshape(y_val_rescaled.shape[0], y_val_rescaled.shape[1], 1)
-
-            tr_loss = net.loss.forward(y_pred_train, y_train_rescaled)
-            tr_metric = metric(y_pred_train, y_train_rescaled)
-
-            val_loss = net.loss.forward(y_pred_val, y_val_rescaled)
-            val_metric = metric(y_pred_val, y_val_rescaled)
-        else:
-            tr_loss, tr_metric = net.statistics(X_train, y_train, metric)
-            val_loss, val_metric = net.statistics(X_val, y_val, metric)
+        tr_loss, tr_metric = net.statistics(X_train, y_train, metric)
+        val_loss, val_metric = net.statistics(X_val, y_val, metric)
 
         tr_losses.append(tr_loss)
         tr_metrics.append(tr_metric)

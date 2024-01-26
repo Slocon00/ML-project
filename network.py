@@ -192,7 +192,7 @@ class Network:
 
         return statistics
 
-    def statistics(self, X, y, metric: Metric):
+    def statistics(self, X, y, metric: Metric, scaler=None):
         """Calculate loss and accuracy for the given input and output data."""
         pred = []
         for x in X:
@@ -200,8 +200,21 @@ class Network:
             pred.append(out)
         pred = np.array(pred)
 
-        loss = self.loss.forward(y_pred=pred, y_true=y)
-        metric_eval = metric(y_pred=pred, y_true=y)
+        if scaler:
+            pred = pred.reshape(pred.shape[0], pred.shape[1])
+            pred = scaler.inverse_transform(pred)
+            pred = pred.reshape(pred.shape[0], pred.shape[1], 1)
+
+            y_rescaled = y.copy()
+            y_rescaled = y_rescaled.reshape(y_rescaled.shape[0], y_rescaled.shape[1])
+            y_rescaled = scaler.inverse_transform(y_rescaled)
+            y_rescaled = y_rescaled.reshape(y_rescaled.shape[0], y_rescaled.shape[1], 1)
+
+            loss = self.loss.forward(y_pred=pred, y_true=y_rescaled)
+            metric_eval = metric(y_pred=pred, y_true=y_rescaled)
+        else:
+            loss = self.loss.forward(y_pred=pred, y_true=y)
+            metric_eval = metric(y_pred=pred, y_true=y)
 
         return loss, metric_eval
 
