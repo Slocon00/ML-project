@@ -211,8 +211,9 @@ class Network:
     
     def to_csv(self):
         return (
-                f"{self.loss}\n"
+                f"\n{self.loss}\n"
                 f"eta: {self.eta}\n"
                 f"tau: {self.tau}\n"
                 f"eta_tau: {self.eta_tau}"
+                f"cyclic: {self.cyclic}\n"
                 )
