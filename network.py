@@ -11,13 +11,17 @@ from metrics import Metric
 
 class Network:
     """Class that represents a neural network. It has a variable number of
-    hidden layers, and a loss function used to calculate the error between the
-    produced output and the expected output.
+    hidden layers, a loss function used to calculate the error between the
+    produced output and the expected output, and a number of hyperparameters
+    that control the training algorithm.
     """
 
     def __init__(self, loss: Loss, eta: float = 1e-1, tau: int = 1000, cyclic: bool = False):
         """Initialize the network.
-        The network is initialized with an empty list of layers and a loss function.
+        The network is initialized with an empty list of layers and a loss
+        function, as well as eta (the learning rate), tau (learning rate decay
+        hyperparameter), and cyclic (which controls whether to use cyclic
+        learning rate).
         """
 
         self.layers = []
@@ -69,14 +73,14 @@ class Network:
     def backward(self, curr_delta: np.ndarray, step: int):
         """Backpropagate the error through the network."""
         
-        # Adjust the learning rate of the network."""
-
+        # Adjust the learning rate of the network
         if self.cyclic:
             if step % self.tau == 0:
                 self.n_cycles += 1
             step = step % self.tau # cycle of tau = 1000
             eta_step = self.eta_tau + 0.5 * (self.eta / 2**self.n_cycles - self.eta_tau) * (1 + np.cos(np.pi * step / self.tau))
-        else: # linear decay of eta
+        else:
+            # Linear decay of eta
             if step > self.tau:
                 step = self.tau
             alpha = step / self.tau
@@ -114,7 +118,9 @@ class Network:
         tr_metrics = []
         val_losses = []
         val_metrics = []
+
         epochs_since_lowest = 0
+
         best_W = []
         best_b = []
         for layer in self.layers:
@@ -178,7 +184,7 @@ class Network:
                 pbar.update(1)
 
         # Network is set with the weights/bias associated with the lowest
-        # val loss
+        # validation loss
         for i, layer in enumerate(self.layers):
             layer.W = best_W[i]
             layer.b = best_b[i]
@@ -193,7 +199,7 @@ class Network:
         return statistics
 
     def statistics(self, X, y, metric: Metric, scaler=None):
-        """Calculate loss and accuracy for the given input and output data."""
+        """Calculate loss and metric for the given input and output data."""
         pred = []
         for x in X:
             out = self.forward(x)
@@ -219,7 +225,7 @@ class Network:
         return loss, metric_eval
 
     def __str__(self) -> str:
-        """Print the network."""
+        """Print the network information."""
         return f"Network: {len(self.layers)} layers \nLoss: {self.loss}"
     
     def to_csv(self):

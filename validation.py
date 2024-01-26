@@ -221,6 +221,7 @@ def create_all_net(seed: int,
 
 
 def show_plots(statistics):
+    """Plot training and validation learning curves."""
     plt.figure(figsize=(10, 5))
 
     plt.subplot(1, 2, 1)
