@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-
+from network import Network
 
 class Starting_values:
     def __init__(self, low: float = -0.5, high: float = 0.5):
@@ -94,3 +94,21 @@ def read_cup(train_path, test_path):
     test.shape = (len(test), 10, 1)
 
     return X_train, y_train, test
+
+
+def print_cup_results(net: Network, blind_test, folder_path):
+    outputs = []
+    for x in blind_test:
+        outputs.append(net.forward(x))
+
+    index = 1
+    with open(f'{folder_path}/ML-CUP23-TS.csv', 'w') as file:
+        file.write('# Irene Dovichi, Marco Lavorini, Ilaria Ritelli\n')
+        file.write('# BunnyProp\n')
+        file.write('# ML-CUP23\n')
+        file.write('# 30/01/2024\n')  # TODO Change if needed
+
+        for output in outputs:
+            line = f'{index},{output[0][0]},{output[1][0]},{output[2][0]}\n'
+            file.write(line)
+            index += 1
