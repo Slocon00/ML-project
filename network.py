@@ -34,6 +34,7 @@ class Network:
         self.cyclic = cyclic
         self.n_cycles = 0 # counter for the number of cycles
         self.cycle_flag = False
+        self.cycles = 1
 
     def add_layer(
             self,
@@ -76,6 +77,8 @@ class Network:
         
         # Adjust the learning rate of the network
         if self.cyclic:
+            # cyclical learning rate non-smooth
+            """ 
             if step % self.tau == 0:
                 if not self.cycle_flag:
                     self.cycle_flag = True
@@ -85,6 +88,21 @@ class Network:
                 self.cycle_flag = False
             step = step % self.tau # cycle of tau = 1000
             eta_step = self.eta_tau + 0.5 * (self.eta / 2**self.n_cycles - self.eta_tau) * (1 + np.cos(np.pi * step / self.tau))
+            """
+
+            # cyclical learning rate smooth
+            if step % self.tau == 0:
+                if not self.cycle_flag:
+                    self.cycle_flag = True
+                    self.cycles *= -1
+                    if self.cycles == -1:
+                        self.n_cycles += 1
+            else:
+                self.cycle_flag = False
+            step = step % self.tau
+            eta_step = self.eta_tau + 0.5 * (self.eta / 2 ** self.n_cycles - self.eta_tau) * (1 + np.cos(np.pi * step / self.tau)) * self.cycles
+            if self.cycles == -1:
+                eta_step = eta_step + self.eta / 2 ** self.n_cycles - self.eta_tau
         else:
             # Linear decay of eta
             if step > self.tau:
