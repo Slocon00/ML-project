@@ -74,7 +74,7 @@ class Network:
 
     def backward(self, curr_delta: np.ndarray, step: int):
         """Backpropagate the error through the network."""
-        
+
         # Adjust the learning rate of the network
         if self.cyclic:
             # cyclical learning rate non-smooth
@@ -121,7 +121,7 @@ class Network:
                 f"Error: vectors must have same shape."
                 f"The shapes are units_size: {units_size} and input_size: {input_size}"
             )
-        
+
     def train(
             self,
             X_train: np.ndarray,
@@ -131,7 +131,9 @@ class Network:
             metric: Metric,
             epochs: int,
             patience: int = np.inf,
-            thresh: float = 0.01
+            thresh: float = 0.01,
+            final_retrain=False,
+            final_tr_loss=0,
     ):
         """Train the neural network on the provided training data. Losses and
         metrics are calculated for each epoch (both for training and
@@ -158,7 +160,7 @@ class Network:
                 # Training the network
                 for X, y in zip(X_train, y_train):
                     out = self.forward(inputs=X)
-                    self.backward(self.loss.backward(y_pred=out, y_true=y), epoch+1)
+                    self.backward(self.loss.backward(y_pred=out, y_true=y), epoch + 1)
                     """if k >= 4:
                         for layer in self.layers:
                             print("W:\n",layer.W)
@@ -167,11 +169,10 @@ class Network:
                         print("y:\n",y)
                         print("loss deriv:\n",self.loss.backward(y_pred=out, y_true=y))"""
 
-
                     # togliere fine debug @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-                    #print(self.layers[0], end='\r')
-                    #time.sleep(0.1)
+                    # print(self.layers[0], end='\r')
+                    # time.sleep(0.1)
 
                     # togliere fine debug @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -186,24 +187,33 @@ class Network:
                 val_losses.append(val_loss)
                 val_metrics.append(val_acc)
 
-                # Check early stopping condition
-                if val_loss < (lowest - lowest*thresh) or lowest == np.inf:
-                    lowest = val_loss
-                    epochs_since_lowest = 0
-
-                    # Record all the layers' weights and bias that correspond to
-                    # the lowest validation loss
-                    best_W = []
-                    best_b = []
-                    for layer in self.layers:
-                        best_W.append(layer.W.copy())
-                        best_b.append(layer.b.copy())
+                if final_retrain:
+                    # If performing final retrain on all data (checking if tr
+                    # loss reaches mean observed during CV)
+                    if tr_loss < final_tr_loss:
+                        for layer in self.layers:
+                            best_W.append(layer.W.copy())
+                            best_b.append(layer.b.copy())
+                        break
                 else:
-                    epochs_since_lowest = epochs_since_lowest + 1
+                    # Check early stopping condition
+                    if val_loss < (lowest - lowest * thresh) or lowest == np.inf:
+                        lowest = val_loss
+                        epochs_since_lowest = 0
 
-                if epochs_since_lowest >= patience:
-                    # Early stopping cond is true
-                    break
+                        # Record all the layers' weights and bias that correspond to
+                        # the lowest validation loss
+                        best_W = []
+                        best_b = []
+                        for layer in self.layers:
+                            best_W.append(layer.W.copy())
+                            best_b.append(layer.b.copy())
+                    else:
+                        epochs_since_lowest = epochs_since_lowest + 1
+
+                    if epochs_since_lowest >= patience:
+                        # Early stopping cond is true
+                        break
 
                 pbar.update(1)
 
@@ -251,7 +261,7 @@ class Network:
     def __str__(self) -> str:
         """Print the network information."""
         return f"Network: {len(self.layers)} layers \nLoss: {self.loss}"
-    
+
     def to_csv(self):
         return (
                 f"\n{self.loss}\n"
