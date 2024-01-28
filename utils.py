@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from network import Network
+
 
 class Starting_values:
     def __init__(self, low: float = -0.5, high: float = 0.5):
@@ -96,7 +96,7 @@ def read_cup(train_path, test_path):
     return X_train, y_train, test
 
 
-def print_cup_results(net: Network, blind_test, folder_path):
+"""def print_cup_results(net: Network, blind_test, folder_path):
     outputs = []
     for x in blind_test:
         outputs.append(net.forward(x))
@@ -111,4 +111,4 @@ def print_cup_results(net: Network, blind_test, folder_path):
         for output in outputs:
             line = f'{index},{output[0][0]},{output[1][0]},{output[2][0]}\n'
             file.write(line)
-            index += 1
+            index += 1"""

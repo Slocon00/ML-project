@@ -303,3 +303,51 @@ Nesterov, 0.99"
  'val_loss_std': 0.031597641685103074,
  'val_metric_std': 0.034184683213774936}
 
+
+MSE
+eta: 0.0007
+tau: 1000
+eta_tau: 7e-06cyclic: False
+"
+"
+10, 512, ReLU
+Fan-in in range [-0.5, 0.5], L2 with lambda 1e-08
+Standard, 0.99","
+512, 128, ReLU
+Fan-in in range [-0.5, 0.5], L2 with lambda 1e-08
+Nesterov, 0.99","
+128, 3, Identity
+Random uniform in range [-0.01, 0.01], L2 with lambda 1e-08
+Nesterov, 0.99"
+{'tr_loss': 0.010493049985750975,
+ 'tr_metric': 0.15249063565802173,
+ 'val_loss': 0.23218225424535155,
+ 'val_metric': 0.5787179175067074,
+ 'tr_loss_std': 0.006080826607736433,
+ 'tr_metric_std': 0.04163912678597874,
+ 'val_loss_std': 0.05671646367832428,
+ 'val_metric_std': 0.051218939171461614}
+
+ MSE
+eta: 0.0005
+tau: 1000
+eta_tau: 5e-06cyclic: False
+"
+"
+10, 512, ReLU
+Fan-in in range [-0.5, 0.5], L2 with lambda 1e-08
+Nesterov, 0.99","
+512, 128, ReLU
+Fan-in in range [-0.5, 0.5], L2 with lambda 1e-08
+Nesterov, 0.99","
+128, 3, Identity
+Random uniform in range [-0.05, 0.05], L2 with lambda 1e-08
+Nesterov, 0.99"
+{'tr_loss': 0.014220659642623612,
+ 'tr_metric': 0.1785470521500868,
+ 'val_loss': 0.2059189167768662,
+ 'val_metric': 0.5703777951899295,
+ 'tr_loss_std': 0.006055606767193652,
+ 'tr_metric_std': 0.03475842953723654,
+ 'val_loss_std': 0.03673760087300916,
+ 'val_metric_std': 0.036456952287550685}
