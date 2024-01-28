@@ -191,6 +191,8 @@ class Network:
                     # If performing final retrain on all data (checking if tr
                     # loss reaches mean observed during CV)
                     if tr_loss < final_tr_loss:
+                        best_W = []
+                        best_b = []
                         for layer in self.layers:
                             best_W.append(layer.W.copy())
                             best_b.append(layer.b.copy())
