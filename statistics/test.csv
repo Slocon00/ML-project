@@ -425,3 +425,27 @@ Nesterov, 0.99"
  'tr_metric_std': 0.02629042209508515,
  'val_loss_std': 0.034750821419215566,
  'val_metric_std': 0.029892364062928906}
+
+MSE
+eta: 0.0005
+tau: 1000
+eta_tau: 5e-06cyclic: False
+"
+"
+10, 512, ReLU
+Fan-in in range [-0.5, 0.5], ElasticNet with lambda 1e-08
+Nesterov, 0.99","
+512, 128, ReLU
+Fan-in in range [-0.5, 0.5], ElasticNet with lambda 1e-08
+Standard, 0.99","
+128, 3, Identity
+Random uniform in range [-0.05, 0.05], ElasticNet with lambda 1e-08
+Nesterov, 0.99"
+{'tr_loss': 0.01488625011385202,
+ 'tr_metric': 0.18504828415340296,
+ 'val_loss': 0.21291903960012987,
+ 'val_metric': 0.5718291320946892,
+ 'tr_loss_std': 0.004685103450986774,
+ 'tr_metric_std': 0.02851491251029298,
+ 'val_loss_std': 0.037931052081708036,
+ 'val_metric_std': 0.026888422959223432}
