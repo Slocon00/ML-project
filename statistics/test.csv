@@ -518,4 +518,28 @@ Nesterov, 0.99"
  'tr_loss_std': 0.0045258163211206615,
  'tr_metric_std': 0.025958173175574622,
  'val_loss_std': 0.04312162002869781,
- 'val_metric_std': 0.0358203407349781}
+ 'val_metric_std': 0.0358203407349781}"
+
+
+MSE
+eta: 0.0005
+tau: 500
+eta_tau: 5e-06cyclic: True"
+"
+10, 512, ReLU
+Fan-in in range [-0.5, 0.5], L2 with lambda 1e-08
+Nesterov, 0.99","
+512, 128, ReLU
+Fan-in in range [-0.5, 0.5], L2 with lambda 1e-08
+Standard, 0.99","
+128, 3, Identity
+Random uniform in range [-0.05, 0.05], L2 with lambda 1e-08
+Nesterov, 0.99"
+{'tr_loss': 0.01635610190668834,
+ 'tr_metric': 0.18441619574949217,
+ 'val_loss': 0.20766983212118012,
+ 'val_metric': 0.5645380934422664,
+ 'tr_loss_std': 0.009634900152695434,
+ 'tr_metric_std': 0.04928397680749495,
+ 'val_loss_std': 0.055003799140695024,
+ 'val_metric_std': 0.06102295308671044}
