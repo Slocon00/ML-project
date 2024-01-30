@@ -34,8 +34,6 @@ class Fan_in(Starting_values):
         return f"Fan-in in range [{self.low}, {self.high}]"
 
 
-# Controllare slides NN_part_2 pag 12 per altri metodi di inizializzazione
-
 def read_monk(train_path, test_path):
     """Read the monk's problems training and test datasets, and preprocess the input
     data with one-hot encoding.
@@ -84,31 +82,13 @@ def read_cup(train_path, test_path):
         names=inputs
     )
 
-    X_train = df_tr[inputs].values
-    test = df_ts[inputs].values
+    X = df_tr[inputs].values
+    blind_test = df_ts[inputs].values
 
-    y_train = df_tr[outputs].values
+    y = df_tr[outputs].values
 
-    X_train.shape = (len(X_train), 10, 1)
-    y_train.shape = (len(y_train), 3, 1)
-    test.shape = (len(test), 10, 1)
+    X.shape = (len(X), 10, 1)
+    y.shape = (len(y), 3, 1)
+    blind_test.shape = (len(blind_test), 10, 1)
 
-    return X_train, y_train, test
-
-
-"""def print_cup_results(net: Network, blind_test, folder_path):
-    outputs = []
-    for x in blind_test:
-        outputs.append(net.forward(x))
-
-    index = 1
-    with open(f'{folder_path}/ML-CUP23-TS.csv', 'w') as file:
-        file.write('# Irene Dovichi, Marco Lavorini, Ilaria Ritelli\n')
-        file.write('# BunnyProp\n')
-        file.write('# ML-CUP23\n')
-        file.write('# 30/01/2024\n')  # TODO Change if needed
-
-        for output in outputs:
-            line = f'{index},{output[0][0]},{output[1][0]},{output[2][0]}\n'
-            file.write(line)
-            index += 1"""
+    return X, y, blind_test

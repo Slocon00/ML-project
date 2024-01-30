@@ -73,6 +73,7 @@ def kfold_crossval(
             metric=metric,
         )
 
+        # Calculate final loss and metric for the net
         tr_loss, tr_metric = net.statistics(X_train, y_train, metric)
         val_loss, val_metric = net.statistics(X_val, y_val, metric)
 
@@ -176,11 +177,11 @@ def create_all_net(seed: int,
 
     layers_size.insert(0, input_size)  # this way we don't have to check if we are in the first hidden layer
 
-    # convert string list into objects list
+    # Convert string list into objects list
     regularizers_ = []
     momentums_ = []
 
-    # starting and activations cannot be None
+    # Starting and activations cannot be None
     starting = [eval(starting[i])(starting_range[i][0], starting_range[i][1]) for i in range(len(starting))]
     activations = [eval(activations[i])() for i in range(len(activations))]
 
@@ -209,7 +210,7 @@ def create_all_net(seed: int,
 
     layers_size.pop(0)
 
-    # destroy all objects for safety
+    # Destroy all objects for safety
     del starting
     del activations
     del regularizers

@@ -161,20 +161,6 @@ class Network:
                 for X, y in zip(X_train, y_train):
                     out = self.forward(inputs=X)
                     self.backward(self.loss.backward(y_pred=out, y_true=y), epoch + 1)
-                    """if k >= 4:
-                        for layer in self.layers:
-                            print("W:\n",layer.W)
-                            print("b:\n",layer.b)
-                        print("out:\n",out)
-                        print("y:\n",y)
-                        print("loss deriv:\n",self.loss.backward(y_pred=out, y_true=y))"""
-
-                    # togliere fine debug @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-                    # print(self.layers[0], end='\r')
-                    # time.sleep(0.1)
-
-                    # togliere fine debug @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
                 # Calculating loss and accuracy for the epoch
                 # Training loss and acc

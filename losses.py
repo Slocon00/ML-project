@@ -25,13 +25,12 @@ class MSE(Loss):
 
     def backward(self, y_pred: np.ndarray, y_true: np.ndarray):
         self.check_shape(y_pred, y_true)
-        return (y_pred - y_true) #/ self.batch_size
+        return y_pred - y_true  # / self.batch_size
     
     def __str__(self) -> str:
         return "MSE"
 
 
-# TODO: for losses with log() check if y_pred is 0, maybe via clip()
 class CrossEntropy(Loss):
     def forward(self, y_pred: np.ndarray, y_true: np.ndarray):
         self.check_shape(y_pred, y_true)
@@ -45,7 +44,6 @@ class CrossEntropy(Loss):
         return "CrossEntropy"
 
 
-# TODO: test if this is correct, shape in sum
 class BinaryCrossEntropy(Loss):
     def forward(self, y_pred: np.ndarray, y_true: np.ndarray):
         self.check_shape(y_pred, y_true)
